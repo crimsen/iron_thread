@@ -1,1 +1,15 @@
 // app global css in SCSS form
+.glass-toolbar {
+  /* Weißer Schleier mit ca. 70% Deckkraft */
+  background: rgba(255, 255, 255, 0.7) !important;
+
+  /* Der eigentliche Milchglas-Effekt */
+  backdrop-filter: blur(10px) saturate(180%);
+  -webkit-backdrop-filter: blur(10px) saturate(180%); /* Für Safari Support */
+
+  /* Optional: Ein feiner Rand lässt es edler wirken */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+
+  /* Textfarbe anpassen, damit sie lesbar bleibt */
+  color: #000;
+}
