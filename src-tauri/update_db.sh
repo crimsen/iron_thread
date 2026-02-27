@@ -30,6 +30,6 @@ for file in src/entities/*.rs; do
         # Füge das #[ts(rename = "PascalName")] Attribut ÜBER dem Struct ein
         # Wir suchen nach der Zeile mit 'pub struct Model' und fügen das Attribut davor ein
         sed -i "/pub struct Model/i #[ts(rename = \"$pascal_name\")]" "$file"
-        sed -i "/pub struct Model/i #[ts(export_to=\"../src/types/${js_file_name}.ts\")]" "$file"
+        sed -i "/pub struct Model/i #[ts(export_to=\"../../src/types/${js_file_name}.ts\")]" "$file"
     fi
 done

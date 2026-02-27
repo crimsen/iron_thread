@@ -24,7 +24,7 @@ impl EntityName for Entity {
 )]
 #[serde(rename_all = "camelCase")]
 #[ts(rename = "Fabric")]
-#[ts(export_to="../src/types/fabric.ts")]
+#[ts(export_to="../../src/types/fabric.ts")]
 pub struct Model {
     pub id: i32,
     pub name: Option<String>,

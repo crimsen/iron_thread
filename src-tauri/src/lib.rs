@@ -55,5 +55,6 @@ mod tests {
         let _ = fabric_x_project::Model::export_all(&config);
         let _ = pattern::Model::export_all(&config);
         let _ = pattern_x_project::Model::export_all(&config);
+        let _ = kind_of_fabric::Model::export_all(&config);
     }
 }
