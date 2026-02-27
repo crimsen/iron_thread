@@ -1,6 +1,5 @@
 // mod entities;
 
-use log::LevelFilter;
 use sea_orm::DatabaseConnection;
 use tauri::Manager;
 use tauri_plugin_log::{Target, TargetKind};
@@ -36,7 +35,9 @@ pub fn run() {
         })
         .invoke_handler(tauri::generate_handler![
             commands::fabric_commands::get_fabrics,
-            commands::fabric_commands::save_fabric
+            commands::fabric_commands::save_fabric,
+            commands::kind_of_fabric_commands::get_kind_of_fabrics,
+            commands::kind_of_fabric_commands::save_kind_of_fabric
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
