@@ -31,5 +31,5 @@ sea-orm = { version = "1", features = [
   "sqlx-sqlite",
   "macros",
 ] }
-ts-rs = { version = "12" }
+ts-rs = { version = "12", features = ["chrono-impl"] }
 migration = { path = "./migration" }

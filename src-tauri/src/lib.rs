@@ -44,7 +44,7 @@ pub fn run() {
 
 #[cfg(test)]
 mod tests {
-    use super::entities::{fabric, fabric_x_project, project};
+    use super::entities::*;
     use ts_rs::{Config, TS};
 
     #[test]
@@ -53,5 +53,7 @@ mod tests {
         let _ = fabric::Model::export_all(&config);
         let _ = project::Model::export_all(&config);
         let _ = fabric_x_project::Model::export_all(&config);
+        let _ = pattern::Model::export_all(&config);
+        let _ = pattern_x_project::Model::export_all(&config);
     }
 }

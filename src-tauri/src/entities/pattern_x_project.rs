@@ -8,7 +8,7 @@ pub struct Entity;
 
 impl EntityName for Entity {
     fn table_name(&self) -> &str {
-        "fabric_x_project"
+        "pattern_x_project"
     }
 }
 
@@ -24,22 +24,22 @@ impl EntityName for Entity {
     ts_rs :: TS,
 )]
 #[serde(rename_all = "camelCase")]
-#[ts(rename = "FabricXProject")]
-#[ts(export_to="../src/types/fabricXProject.ts")]
+#[ts(rename = "PatternXProject")]
+#[ts(export_to="../src/types/patternXProject.ts")]
 pub struct Model {
-    pub fabric_id: i32,
+    pub pattern_id: i32,
     pub project_id: i32,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
-    FabricId,
+    PatternId,
     ProjectId,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
 pub enum PrimaryKey {
-    FabricId,
+    PatternId,
     ProjectId,
 }
 
@@ -52,7 +52,7 @@ impl PrimaryKeyTrait for PrimaryKey {
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
-    Fabric,
+    Pattern,
     Project,
 }
 
@@ -60,7 +60,7 @@ impl ColumnTrait for Column {
     type EntityName = Entity;
     fn def(&self) -> ColumnDef {
         match self {
-            Self::FabricId => ColumnType::Integer.def(),
+            Self::PatternId => ColumnType::Integer.def(),
             Self::ProjectId => ColumnType::Integer.def(),
         }
     }
@@ -69,9 +69,9 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
-            Self::Fabric => Entity::belongs_to(super::fabric::Entity)
-                .from(Column::FabricId)
-                .to(super::fabric::Column::Id)
+            Self::Pattern => Entity::belongs_to(super::pattern::Entity)
+                .from(Column::PatternId)
+                .to(super::pattern::Column::Id)
                 .into(),
             Self::Project => Entity::belongs_to(super::project::Entity)
                 .from(Column::ProjectId)
@@ -81,9 +81,9 @@ impl RelationTrait for Relation {
     }
 }
 
-impl Related<super::fabric::Entity> for Entity {
+impl Related<super::pattern::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::Fabric.def()
+        Relation::Pattern.def()
     }
 }
 

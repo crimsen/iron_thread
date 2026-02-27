@@ -2,4 +2,7 @@
 
 pub use super::fabric::Entity as Fabric;
 pub use super::fabric_x_project::Entity as FabricXProject;
+pub use super::kind_of_fabric::Entity as KindOfFabric;
+pub use super::pattern::Entity as Pattern;
+pub use super::pattern_x_project::Entity as PatternXProject;
 pub use super::project::Entity as Project;

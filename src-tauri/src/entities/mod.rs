@@ -4,4 +4,7 @@ pub mod prelude;
 
 pub mod fabric;
 pub mod fabric_x_project;
+pub mod kind_of_fabric;
+pub mod pattern;
+pub mod pattern_x_project;
 pub mod project;

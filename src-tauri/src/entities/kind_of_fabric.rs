@@ -8,7 +8,7 @@ pub struct Entity;
 
 impl EntityName for Entity {
     fn table_name(&self) -> &str {
-        "project"
+        "kind_of_fabric"
     }
 }
 
@@ -24,8 +24,8 @@ impl EntityName for Entity {
     ts_rs :: TS,
 )]
 #[serde(rename_all = "camelCase")]
-#[ts(rename = "Project")]
-#[ts(export_to="../src/types/project.ts")]
+#[ts(rename = "KindOfFabric")]
+#[ts(export_to="../src/types/kindOfFabric.ts")]
 pub struct Model {
     pub id: i32,
     pub name: String,
@@ -51,8 +51,7 @@ impl PrimaryKeyTrait for PrimaryKey {
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
-    FabricXProject,
-    PatternXProject,
+    Fabric,
 }
 
 impl ColumnTrait for Column {
@@ -60,7 +59,7 @@ impl ColumnTrait for Column {
     fn def(&self) -> ColumnDef {
         match self {
             Self::Id => ColumnType::Integer.def(),
-            Self::Name => ColumnType::String(StringLen::None).def(),
+            Self::Name => ColumnType::String(StringLen::None).def().unique(),
         }
     }
 }
@@ -68,43 +67,14 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
-            Self::FabricXProject => {
-                Entity::has_many(super::fabric_x_project::Entity).into()
-            }
-            Self::PatternXProject => {
-                Entity::has_many(super::pattern_x_project::Entity).into()
-            }
+            Self::Fabric => Entity::has_many(super::fabric::Entity).into(),
         }
-    }
-}
-
-impl Related<super::fabric_x_project::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::FabricXProject.def()
-    }
-}
-
-impl Related<super::pattern_x_project::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::PatternXProject.def()
     }
 }
 
 impl Related<super::fabric::Entity> for Entity {
     fn to() -> RelationDef {
-        super::fabric_x_project::Relation::Fabric.def()
-    }
-    fn via() -> Option<RelationDef> {
-        Some(super::fabric_x_project::Relation::Project.def().rev())
-    }
-}
-
-impl Related<super::pattern::Entity> for Entity {
-    fn to() -> RelationDef {
-        super::pattern_x_project::Relation::Pattern.def()
-    }
-    fn via() -> Option<RelationDef> {
-        Some(super::pattern_x_project::Relation::Project.def().rev())
+        Relation::Fabric.def()
     }
 }
 
