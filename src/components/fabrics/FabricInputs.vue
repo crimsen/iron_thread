@@ -7,8 +7,7 @@
       <q-input type="number" label="Width" v-model.number="fabric.width" />
       <q-input type="number" label="Costs" v-model.number="fabric.costs" />
       <q-input type="text" label="Producer" v-model="fabric.producer" />
-      <q-select v-model.number="fabric.kindOfFabricId" :options="computedOptions" option-label="name" option-value="id"
-        use-input input-debounce="0" @filter="filterFn"></q-select>
+      <KindOfFabricSelect v-model="fabric.kindOfFabricId" />
       <q-input type="date" label="Date of Purchase" v-model="fabric.dateOfPurchase" />
     </q-card-section>
     <q-card-section>
@@ -18,10 +17,11 @@
 </template>
 <script setup lang="ts">
 import { useFabricStore } from 'src/stores/fabricStore';
-import { useKindOfFabricStore } from 'src/stores/kindOfFabricStore';
 import type { Fabric } from 'src/types/fabric';
-import type { KindOfFabric } from 'src/types/kindOfFabric';
-import { computed, ref } from 'vue';
+import { ref } from 'vue';
+
+import KindOfFabricSelect from 'src/components/kindOfFabric/KindOfFabricSelect.vue';
+
 const emptyFabric: Fabric = {
   id: -1,
   name: null,
@@ -36,22 +36,8 @@ const emptyFabric: Fabric = {
 const fabric = ref<Fabric>(emptyFabric);
 
 const fabricStore = useFabricStore();
-const kindOfFabricStore = useKindOfFabricStore();
 
 async function saveNewFabric() {
   await fabricStore.saveFabric(fabric.value);
-}
-
-const filter = ref<Array<KindOfFabric>>([]);
-
-const computedOptions = computed({
-  get: () => (filter.value.length > 0 ? filter.value : kindOfFabricStore.kindOfFabrics),
-  set: (val) => (filter.value = val),
-});
-
-async function filterFn(value: string, update: (callback: () => void) => void) {
-  update(() => {
-    computedOptions.value = kindOfFabricStore.filterKindOfFabricByName(value);
-  });
 }
 </script>
