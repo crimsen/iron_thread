@@ -25,7 +25,7 @@ impl EntityName for Entity {
 )]
 #[serde(rename_all = "camelCase")]
 #[ts(rename = "PatternXProject")]
-#[ts(export_to="../../src/types/patternXProject.ts")]
+#[ts(export_to = "../../src/types/patternXProject.ts")]
 pub struct Model {
     pub pattern_id: i32,
     pub project_id: i32,
