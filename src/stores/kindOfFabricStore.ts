@@ -12,7 +12,12 @@ export const useKindOfFabricStore = defineStore('kindOfFabricStore', {
   getters: {
     getKindOfFabricById: (state) => {
       return (id: number): KindOfFabric | undefined => {
-        return state.kindOfFabrics.find((k) => (k.id = id));
+        debug(`search kind of fabric width id = ${id}`).catch(() => {});
+        const retVal = state.kindOfFabrics.find((k: KindOfFabric) => {
+          return k.id == id;
+        });
+        debug(`found kind of fabric = ${JSON.stringify(retVal)}`).catch(() => {});
+        return retVal;
       };
     },
     filterKindOfFabricByName: (state) => {
