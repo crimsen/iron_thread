@@ -1,6 +1,6 @@
 <template>
   <q-card>
-    <q-card-section class="caption"> New Fabric </q-card-section>
+    <q-card-section v-show="title" class="caption">{{ title }}</q-card-section>
     <q-card-section class="column q-gutter-sm">
       <q-input outlined dense type="text" label="Name" v-model="fabric.name" />
       <q-input type="number" label="Length" v-model.number="fabric.length" />
@@ -19,6 +19,10 @@
 import { useFabricStore } from 'src/stores/fabricStore';
 import type { Fabric } from 'src/types/fabric';
 import { ref } from 'vue';
+
+defineProps<{
+  title?: string;
+}>();
 
 import KindOfFabricSelect from 'src/components/kindOfFabric/KindOfFabricSelect.vue';
 

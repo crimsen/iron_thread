@@ -3,7 +3,7 @@
   <q-page class="column">
     <FabricsList />
     <q-dialog v-model="showAddFabricDialog">
-      <FabricInputs />
+      <FabricInputs title="New Fabric" />
     </q-dialog>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <q-btn fab icon="add" color="accent" @click="showAddFabricDialog = !showAddFabricDialog" />
