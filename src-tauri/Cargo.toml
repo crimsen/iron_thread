@@ -33,3 +33,4 @@ sea-orm = { version = "1", features = [
 ] }
 ts-rs = { version = "12", features = ["chrono-impl"] }
 migration = { path = "./migration" }
+tauri-plugin-fs = "2"

@@ -18,11 +18,19 @@
 <script setup lang="ts">
 import { useFabricStore } from 'src/stores/fabricStore';
 import type { Fabric } from 'src/types/fabric';
-import { ref } from 'vue';
+import { onBeforeMount, ref } from 'vue';
 
 defineProps<{
   title?: string;
 }>();
+
+onBeforeMount(() => {
+  if (modelFabric.value) {
+    fabric.value = modelFabric.value;
+  }
+});
+
+const modelFabric = defineModel<Fabric | undefined>();
 
 import KindOfFabricSelect from 'src/components/kindOfFabric/KindOfFabricSelect.vue';
 

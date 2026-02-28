@@ -30,7 +30,14 @@ export const useFabricStore = defineStore('fabricStore', {
       await debug(`save Fabric ${JSON.stringify(fabric)}`);
       try {
         await debug('wait to save Fabric');
-        this.fabrics.push(await fabricApi.save(fabric));
+        const newFabric = await fabricApi.save(fabric);
+        const idx = this.fabrics.indexOf(newFabric);
+        if (idx < 0) {
+          this.fabrics.push(newFabric);
+        } else {
+          this.fabrics[idx] = { ...newFabric };
+        }
+        // this.fabrics.push(await fabricApi.save(fabric));
       } catch (err) {
         this.hasError = err as string;
         await error(this.hasError);
