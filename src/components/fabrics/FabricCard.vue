@@ -1,12 +1,11 @@
 <template>
-  <q-card class="q-ma-sm border" v-ripple @click="openFabric">
+  <q-card class="q-ma-sm border-radius-all" v-ripple @click="openFabric">
     <q-card-section horizontal>
       <div class="col-auto">
         <q-img class="thumpnail border-left" src="https://cdn.quasar.dev/img/parallax2.jpg" />
       </div>
 
       <div class="col">
-        <!--<q-btn flat round color="red" icon="favorite" />-->
         <div class="row full-width justify-center">
           <div class="col-6 q-px-sm q-py-xs">
             <q-input readonly :modelValue="fabric.length" label="Length" />
@@ -55,18 +54,4 @@ const openFabric = () => {
 
 const kindOfFabricStore = useKindOfFabricStore();
 </script>
-<style lang="scss" scoped>
-.thumpnail {
-  height: 6rem;
-  width: 6rem;
-  object-fit: cover;
-}
-
-.border {
-  border-radius: 0.5rem;
-}
-
-.border-left {
-  border-radius: 0.5rem 0 0 0.5rem;
-}
-</style>
+<style lang="scss" scoped></style>

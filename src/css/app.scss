@@ -1,15 +1,81 @@
 // app global css in SCSS form
-.glass-toolbar {
-  /* Weißer Schleier mit ca. 70% Deckkraft */
-  background: rgba(255, 255, 255, 0.7) !important;
+// .glass {
+//   /* Weißer Schleier mit ca. 70% Deckkraft */
+//   background: rgba(255, 255, 255, 0.7) !important;
+//
+//   /* Der eigentliche Milchglas-Effekt */
+//   backdrop-filter: blur(10px) saturate(180%);
+//   -webkit-backdrop-filter: blur(10px) saturate(180%); /* Für Safari Support */
+//
+//   /* Optional: Ein feiner Rand lässt es edler wirken */
+//   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+//
+//   /* Textfarbe anpassen, damit sie lesbar bleibt */
+//   color: #000;
+// }
 
-  /* Der eigentliche Milchglas-Effekt */
-  backdrop-filter: blur(10px) saturate(180%);
-  -webkit-backdrop-filter: blur(10px) saturate(180%); /* Für Safari Support */
+.glass {
+  /* 1. Mehr Transparenz für den "Glas"-Look */
+  /* Wir senken die Deckkraft, damit der Blur besser wirkt */
+  background: rgba(255, 255, 255, 0.4) !important;
 
-  /* Optional: Ein feiner Rand lässt es edler wirken */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  /* 2. Verstärkter Blur & Sättigung */
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
 
-  /* Textfarbe anpassen, damit sie lesbar bleibt */
-  color: #000;
+  /* 3. Der "Glint"-Effekt (Lichtkante) */
+  /* Ein doppelter Border-Effekt simuliert die Dicke des Glases */
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-right-color: rgba(255, 255, 255, 0.2);
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+
+  /* 4. Subtile Tiefe durch Schatten */
+  /* Ein weicher Schatten lässt das Glas "schweben" */
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+
+  /* 5. Der Geheimtipp: Ein feiner Glanz-Verlauf */
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  ) !important;
+}
+
+.thumpnail {
+  height: 6rem;
+  width: 6rem;
+  object-fit: cover;
+}
+
+.border-radius-all {
+  border-radius: 0.5rem;
+}
+
+.border-radius-left {
+  border-radius: 0.5rem 0 0 0.5rem;
+}
+
+.border-radius-right {
+  border-radius: 0 0.5rem 0.5rem 0;
+}
+
+.border-radius-top {
+  border-radius: 0.5rem 0.5rem 0 0;
+}
+
+.border-radius-bottom {
+  border-radius: 0 0 0.5rem 0.5rem;
+}
+
+.border-radius-top-left {
+  border-radius: 0.5rem 0 0 0;
+}
+.border-radius-top-right {
+  border-radius: 0 0.5rem 0 0;
+}
+.border-radius-bottom-right {
+  border-radius: 0 0 0.5rem 0;
+}
+.border-radius-bottom-left {
+  border-radius: 0 0 0 0.5rem;
 }

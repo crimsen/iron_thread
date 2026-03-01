@@ -1,5 +1,5 @@
 <template>
-  <q-card>
+  <q-card class="glass border-radius-all">
     <q-card-section v-show="title" class="caption">{{ title }}</q-card-section>
     <q-card-section class="column q-gutter-sm">
       <q-input outlined dense type="text" label="Name" v-model="fabric.name" />
