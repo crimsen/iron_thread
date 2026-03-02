@@ -6,7 +6,12 @@
       <FabricInputs title="New Fabric" />
     </q-dialog>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
-      <q-btn fab icon="add" color="accent" @click="showAddFabricDialog = !showAddFabricDialog" />
+      <q-btn
+        class="glass-btn glass-bg-primary glass-text"
+        fab
+        icon="add"
+        @click="showAddFabricDialog = !showAddFabricDialog"
+      />
     </q-page-sticky>
   </q-page>
 </template>

@@ -20,7 +20,13 @@
       }
     ],
     "security": {
-      "csp": null
+      "csp": "default-src 'self'; img-src 'self' asset: http://asset.localhost http://localhost:9090; frame-src 'self' asset: http//asset.localhost http://localhost:9090; style-src 'self' 'unsafe-inline'; script-src 'self';",
+      "assetProtocol": {
+        "enable": true,
+        "scope": [
+          "$APPDATA/**/*"
+        ]
+      }
     }
   },
   "bundle": {

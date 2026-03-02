@@ -1,8 +1,8 @@
 <template>
-  <q-card class="q-ma-sm border-radius-all" v-ripple @click="openFabric">
+  <q-card class="glass q-ma-sm border-radius-all" v-ripple @click="openFabric">
     <q-card-section horizontal>
       <div class="col-auto">
-        <q-img class="thumpnail border-left" src="https://cdn.quasar.dev/img/parallax2.jpg" />
+        <q-img class="thumpnail border-radius-left" :src="image" />
       </div>
 
       <div class="col">
@@ -33,9 +33,12 @@ import { useKindOfFabricStore } from 'src/stores/kindOfFabricStore';
 import type { Fabric } from 'src/types/fabric';
 import { computed, onBeforeMount, ref } from 'vue';
 import FabricInputs from './FabricInputs.vue';
+import { convertFileSrc } from '@tauri-apps/api/core';
+import { debug } from '@tauri-apps/plugin-log';
 
 onBeforeMount(async () => {
   await kindOfFabricStore.loadKindOfFabrics();
+  if (props.fabric.fotoPath) await debug(props.fabric.fotoPath);
 });
 
 const props = defineProps<{ fabric: Fabric }>();
@@ -51,6 +54,14 @@ const openFabric = () => {
   modifyFabric.value = props.fabric;
   showDialog.value = true;
 };
+
+const image = computed(() => {
+  if (props.fabric.fotoPath) {
+    const letVal = convertFileSrc(props.fabric.fotoPath);
+    return letVal;
+  }
+  return '/public/updload_fabric.png';
+});
 
 const kindOfFabricStore = useKindOfFabricStore();
 </script>

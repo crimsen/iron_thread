@@ -9,7 +9,6 @@ export const useFabricStore = defineStore('fabricStore', {
     isLoading: false,
     hasError: null as string | null,
   }),
-  // getters: {},
   actions: {
     async loadFabrics() {
       this.isLoading = true;
@@ -25,12 +24,16 @@ export const useFabricStore = defineStore('fabricStore', {
         this.isLoading = false;
       }
     },
-    async saveFabric(fabric: Fabric) {
+    async saveFabric(fabric: Fabric, fabricImage: File | null = null) {
       this.isLoading = true;
       await debug(`save Fabric ${JSON.stringify(fabric)}`);
       try {
         await debug('wait to save Fabric');
         const newFabric = await fabricApi.save(fabric);
+        if (fabricImage) {
+          const path = await fabricApi.saveFabricWithImage(newFabric, fabricImage);
+          if (path) newFabric.fotoPath = path;
+        }
         const idx = this.fabrics.indexOf(newFabric);
         if (idx < 0) {
           this.fabrics.push(newFabric);

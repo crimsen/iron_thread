@@ -1,5 +1,5 @@
 import { defineBoot } from '#q-app/wrappers';
-import { QInput, QSelect } from 'quasar';
+import { QFile, QInput, QSelect } from 'quasar';
 // "async" is optional;
 // more info on params: https://v2.quasar.dev/quasar-cli-vite/boot-files
 export default defineBoot(() => {
@@ -9,6 +9,11 @@ export default defineBoot(() => {
     stackLabel: true,
   });
   SetComponentDefaults<QSelect>(QSelect, {
+    outlined: true,
+    dense: true,
+    stackLabel: true,
+  });
+  SetComponentDefaults<QFile>(QFile, {
     outlined: true,
     dense: true,
     stackLabel: true,

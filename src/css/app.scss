@@ -1,49 +1,186 @@
-// app global css in SCSS form
-// .glass {
-//   /* Weißer Schleier mit ca. 70% Deckkraft */
-//   background: rgba(255, 255, 255, 0.7) !important;
-//
-//   /* Der eigentliche Milchglas-Effekt */
-//   backdrop-filter: blur(10px) saturate(180%);
-//   -webkit-backdrop-filter: blur(10px) saturate(180%); /* Für Safari Support */
-//
-//   /* Optional: Ein feiner Rand lässt es edler wirken */
-//   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
-//
-//   /* Textfarbe anpassen, damit sie lesbar bleibt */
-//   color: #000;
+// body {
+//   background: radial-gradient(circle at 50% -20%, #2c3e50, #000000);
+//   background-attachment: fixed;
 // }
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+
+  background-color: #e5e7eb;
+
+  background-image:
+    radial-gradient(at 0% 0%, rgba(255, 255, 255, 0.5) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(156, 163, 175, 0.2) 0px, transparent 50%);
+
+  background-attachment: fixed;
+}
 
 .glass {
-  /* 1. Mehr Transparenz für den "Glas"-Look */
-  /* Wir senken die Deckkraft, damit der Blur besser wirkt */
   background: rgba(255, 255, 255, 0.4) !important;
 
-  /* 2. Verstärkter Blur & Sättigung */
   backdrop-filter: blur(20px) saturate(200%);
   -webkit-backdrop-filter: blur(20px) saturate(200%);
 
-  /* 3. Der "Glint"-Effekt (Lichtkante) */
-  /* Ein doppelter Border-Effekt simuliert die Dicke des Glases */
   border: 1px solid rgba(255, 255, 255, 0.5);
   border-right-color: rgba(255, 255, 255, 0.2);
   border-bottom-color: rgba(255, 255, 255, 0.2);
 
-  /* 4. Subtile Tiefe durch Schatten */
-  /* Ein weicher Schatten lässt das Glas "schweben" */
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
 
-  /* 5. Der Geheimtipp: Ein feiner Glanz-Verlauf */
   background: linear-gradient(
     135deg,
     rgba(255, 255, 255, 0.4) 0%,
     rgba(255, 255, 255, 0.1) 100%
   ) !important;
+  color: rgba(50, 50, 50, 0.9);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  // color: rgba(80, 80, 80, 0.9) !important;
+  // text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
 }
 
+.glass-text {
+  color: rgba(40, 40, 40, 0.9) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+.glass-drawer {
+  background: transparent !important;
+}
+
+.glass-drawer .q-drawer__content {
+  background: rgba(255, 255, 255, 0.4) !important;
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+
+  border-right: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.q-drawer--on-top {
+  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.2) !important;
+}
+.q-drawer {
+  background: rgba(255, 255, 255, 0.4) !important;
+
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-right-color: rgba(255, 255, 255, 0.2);
+  border-bottom-color: rgba(255, 255, 255, 0.2);
+  border-radius: 0 0.5rem 0.5rem 0;
+
+  margin: 0.5rem 0 0.5rem 0;
+
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.4) 0%,
+    rgba(255, 255, 255, 0.1) 100%
+  ) !important;
+  color: rgba(50, 50, 50, 0.9);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+.q-drawer .q-item.q-router-link--active,
+.q-drawer .q-item--active {
+  background: rgba(255, 255, 255, 0.3) !important;
+  color: #fff !important; /* Text auf dem Glow meist weiß besser */
+  box-shadow:
+    0 0 15px rgba(255, 255, 255, 0.4),
+    inset 0 0 10px rgba(255, 255, 255, 0.2);
+
+  margin: 4px 8px;
+  border-radius: 12px;
+
+  border-left: 3px solid #fff;
+
+  transition: all 0.3s ease;
+}
+
+/* Hover-Effekt: Ein sanftes Aufleuchten beim Drüberfahren */
+.q-drawer .q-item:hover:not(.q-item--active) {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 12px;
+  margin: 4px 8px;
+}
+.glass-btn {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  // border-radius: 10px;
+
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0) 100%
+  ) !important;
+}
+$colors: (
+  'primary': $primary,
+  'secondary': $secondary,
+  'accent': $accent,
+  'positive': $positive,
+  'negative': $negative,
+  'info': $info,
+  'warning': $warning,
+  'dark': $dark,
+);
+
+@each $name, $color in $colors {
+  .glass-bg-#{$name} {
+    // Erzeugt eine transparente Version der Farbe (ca. 15% Deckkraft)
+    background: rgba($color, 0.15) !important;
+
+    // Glas-Effekte
+    backdrop-filter: blur(15px) saturate(160%);
+    -webkit-backdrop-filter: blur(15px) saturate(160%);
+
+    // Eine leicht hellere Lichtkante basierend auf der Originalfarbe
+    border: 1px solid rgba($color, 0.4);
+
+    // Ein subtiler innerer Glow in der jeweiligen Farbe
+    box-shadow:
+      inset 0 0 10px rgba($color, 0.1),
+      0 4px 15px rgba(0, 0, 0, 0.1);
+
+    // Textfarbe automatisch weiß machen, außer bei hellen Farben wie Warning
+    @if (lightness($color) > 70) {
+      color: #1d1d1d;
+    } @else {
+      color: white;
+    }
+  }
+}
+
+/* Hover: Das Glas "erhitzt" sich und leuchtet auf */
+.glass-btn:hover {
+  background: rgba(255, 255, 255, 0.3) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px); /* Kleiner "Lift"-Effekt */
+}
+
+/* Active: Das Glas wird "gedrückt" */
+.glass-btn:active {
+  transform: translateY(1px);
+  background: rgba(255, 255, 255, 0.1) !important;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
 .thumpnail {
   height: 6rem;
   width: 6rem;
+  object-fit: cover;
+}
+
+.thumpnail-input {
+  height: 15rem;
+  width: 15rem;
   object-fit: cover;
 }
 

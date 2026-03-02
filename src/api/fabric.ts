@@ -8,4 +8,23 @@ export const fabricApi = {
     if (typeof fabric.id != 'number') fabric.id = -1;
     return await invoke<Fabric>('save_fabric', { fabricData: fabric });
   },
+  async saveFabricWithImage(fabric: Fabric, fabricImage: File): Promise<string | undefined> {
+    // 1. Datei in Bytes umwandeln
+    const arrayBuffer = await fabricImage.arrayBuffer();
+    const bytes = new Uint8Array(arrayBuffer);
+
+    try {
+      // 2. An Rust Command senden
+      const filePath: string = await invoke('upload_fabric_image', {
+        fileName: fabricImage.name,
+        fileData: Array.from(bytes), // Als Array für JSON-Serialisierung
+        fabricId: fabric.id,
+      });
+
+      console.log('Bild unter diesem Pfad gespeichert:', filePath);
+      return filePath;
+    } catch (error) {
+      console.error('Fehler beim Speichern:', error);
+    }
+  },
 };

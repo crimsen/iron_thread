@@ -10,6 +10,28 @@
     "store:default",
     "sql:default",
     "log:default",
-    "fs:default"
+    "fs:default",
+    "core:image:allow-from-path",
+    "core:image:allow-from-bytes",
+    "fs:allow-appdata-read",
+    "fs:allow-appdata-write",
+    "fs:allow-read-file",
+    "fs:allow-write-file",
+    "fs:allow-appdata-read-recursive",
+    "fs:allow-appdata-write-recursive",
+    {
+      "identifier": "fs:scope",
+      "allow": [
+        {
+          "path": "$APPDATA/**"
+        },
+        {
+          "path": "$RESOURCE/**"
+        },
+        {
+          "path": "$APPLocalData/**"
+        }
+      ]
+    }
   ]
 }

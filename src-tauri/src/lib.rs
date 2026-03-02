@@ -37,6 +37,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::fabric_commands::get_fabrics,
             commands::fabric_commands::save_fabric,
+            commands::fabric_commands::upload_fabric_image,
             commands::kind_of_fabric_commands::get_kind_of_fabrics,
             commands::kind_of_fabric_commands::save_kind_of_fabric
         ])

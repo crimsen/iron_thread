@@ -1,3 +1,4 @@
+use std::fs;
 use std::ops::Deref;
 
 use crate::DbState;
@@ -5,7 +6,7 @@ use sea_orm::ActiveValue::{NotSet, Set};
 use sea_orm::{
     ActiveModelTrait, ActiveValue, EntityTrait, IntoActiveModel, TryIntoModel,
 };
-use tauri::State;
+use tauri::{AppHandle, Manager, State};
 
 use crate::entities::fabric;
 use crate::entities::prelude::Fabric;
@@ -52,4 +53,34 @@ pub async fn save_fabric(
     let saved_model = active_model.save(db).await.map_err(|e| e.to_string())?;
     log::debug!("saved_model is: {:?}", &saved_model);
     saved_model.try_into_model().map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+pub async fn upload_fabric_image(
+    app: AppHandle,
+    db_state: State<'_, DbState>,
+    file_name: String,
+    file_data: Vec<u8>,
+    fabric_id: i32,
+) -> Result<String, String> {
+    let app_dir = app.path().app_data_dir().unwrap();
+    let upload_dir = app_dir.join("fabric_images");
+
+    fs::create_dir_all(&upload_dir).map_err(|e| e.to_string())?;
+
+    let file_path = upload_dir.join(format!("{}_{}", fabric_id, file_name));
+
+    fs::write(&file_path, file_data).map_err(|e| e.to_string())?;
+    let db = &db_state.db;
+    let fabric = Fabric::find_by_id(fabric_id)
+        .one(db)
+        .await
+        .map_err(|e| e.to_string());
+    if let Ok(Some(fabric)) = fabric {
+        let mut active_model = fabric.into_active_model();
+        active_model.foto_path =
+            Set(Some(file_path.to_string_lossy().to_string().clone()));
+        let _ = active_model.save(db).await.map_err(|e| e.to_string());
+    }
+    Ok(file_path.to_string_lossy().into_owned())
 }

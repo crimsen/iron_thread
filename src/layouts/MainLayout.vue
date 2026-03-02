@@ -6,9 +6,12 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
+    <q-drawer class="glass-drawer" v-model="leftDrawerOpen">
       <q-list>
-        <!--        <q-item-label header>  </q-item-label>-->
+        <q-item-label header>Navagation </q-item-label>
+        <q-item clickable v-ripple :to="{ name: 'main' }">
+          <q-item-section>Fabrics</q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
