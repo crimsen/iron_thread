@@ -23,8 +23,9 @@
       </div>
     </q-card-section>
   </q-card>
-  <q-dialog v-model="showDialog">
-    <FabricInputs v-model="modifyFabric" />
+  <q-dialog v-model="showDialog" v-if="modifyFabric">
+    <!--<FabricInputs v-model="modifyFabric" />-->
+    <GenericInputs v-model="modifyFabric" :schema="schema" />
   </q-dialog>
 </template>
 
@@ -32,9 +33,11 @@
 import { useKindOfFabricStore } from 'src/stores/kindOfFabricStore';
 import type { Fabric } from 'src/types/fabric';
 import { computed, onBeforeMount, ref } from 'vue';
-import FabricInputs from './FabricInputs.vue';
+// import FabricInputs from './FabricInputs.vue';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { debug } from '@tauri-apps/plugin-log';
+import type { FieldConfigFabric } from '../generic/genericType';
+import GenericInputs from '../generic/GenericInputs.vue';
 
 onBeforeMount(async () => {
   await kindOfFabricStore.loadKindOfFabrics();
@@ -42,6 +45,17 @@ onBeforeMount(async () => {
 });
 
 const props = defineProps<{ fabric: Fabric }>();
+
+const schema: FieldConfigFabric[] = [
+  { key: 'fotoPath', label: 'Foto', type: 'fotoPath' },
+  { key: 'name', label: 'Name', type: 'text' },
+  { key: 'length', label: 'Length', type: 'number' },
+  { key: 'width', label: 'Width', type: 'number' },
+  { key: 'kindOfFabricId', label: 'Kind of Fabric', type: 'KindOfFabricSelect' },
+  { key: 'costs', label: 'Costs', type: 'number' },
+  { key: 'producer', label: 'Producer', type: 'text' },
+  { key: 'dateOfPurchase', label: 'Date of purchase', type: 'date' },
+];
 
 const kindOfFabric = computed(() => {
   return kindOfFabricStore.getKindOfFabricById(props.fabric.kindOfFabricId || -1);
