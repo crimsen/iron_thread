@@ -1,17 +1,23 @@
 <template>
-  <div @click="triggerUpload">
-    <q-img class="border-radius-all thumpnail-input self-center" :src="computedImage">
-      <q-btn
-        v-if="imageURL || modelValue"
-        class="glass-btn glass-bg-negative q-ma-sm absolute-top-right"
-        icon="delete"
-        round
-        size="sm"
-      />
+  <div class="relative-position self-center" style="width: fit-content">
+    <q-img
+      class="border-radius-all thumpnail-input self-center"
+      :src="computedImage"
+      @click="triggerUpload"
+    >
     </q-img>
+    <q-btn
+      v-if="imageURL || modelValue"
+      class="glass-btn glass-bg-negative q-ma-sm absolute-top-right"
+      icon="delete"
+      round
+      size="sm"
+      style="z-index: 999; pointer-events: auto"
+      @click.stop="deleteImage"
+    />
     <q-file
       ref="fileInputRef"
-      accept="image/*a"
+      accept="image/*"
       v-model="imageFile"
       v-show="false"
       capture="environment"
@@ -23,8 +29,9 @@
 import { computed, ref, watch } from 'vue';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import type { QFile } from 'quasar';
+// import { debug } from '@tauri-apps/plugin-log';
 
-const modelValue = defineModel<string>();
+const modelValue = defineModel<string | null>();
 
 const fileInputRef = ref<QFile>();
 
@@ -44,7 +51,6 @@ const computedImage = computed(() => {
 });
 
 const triggerUpload = () => {
-  // debug(`hallo??? ${JSON.stringify(fileInputRef.value)}`).catch(() => {});
   fileInputRef.value?.pickFiles();
 };
 
@@ -52,12 +58,19 @@ const updateFabricImage = (file: File) => {
   if (imageURL.value) {
     URL.revokeObjectURL(imageURL.value);
   }
-  // await debug(`file: ${JSON.stringify(file)}`);
   imageURL.value = URL.createObjectURL(file);
-  // await debug(`url: ${JSON.stringify(imageURL.value)}`);
-  // if (qImg.value) {
-  //   qImg.value.src = imageURL.value;
-  // }
+};
+
+const deleteImage = () => {
+  if (imageURL.value) {
+    URL.revokeObjectURL(imageURL.value);
+    imageURL.value = undefined;
+    return;
+  }
+  if (modelValue.value) {
+    modelValue.value = undefined;
+  }
+  // await debug('delete ausgelöst');
 };
 
 watch(imageFile, (newVal) => {

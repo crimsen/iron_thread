@@ -1,4 +1,5 @@
 use std::fs;
+use std::path::Path;
 
 use crate::dtos::fabric::FabricDTO;
 use crate::DbState;
@@ -29,27 +30,22 @@ pub async fn save_fabric(
         .one(db)
         .await
         .map_err(|e| e.to_string())?;
-    let mut active_model: fabric::ActiveModel = fabric_data.into();
+    let mut active_model: fabric::ActiveModel = fabric_data.clone().into();
     if let Some(existing_fabric) = existing_fabric {
-        active_model.id = existing_fabric.into_active_model().id
+        let existing_active_model = existing_fabric.clone().into_active_model();
+        active_model.id = existing_active_model.id;
+        match (fabric_data.foto_path, existing_fabric.foto_path) {
+            (None, Some(path)) => {
+                let _ = fs::remove_file(Path::new(&path));
+            }
+            (Some(path_a), Some(path_b)) => {
+                if path_a != path_b {
+                    let _ = fs::remove_file(Path::new(&path_b));
+                }
+            }
+            (_, _) => {}
+        }
     }
-    // let active_model = if let Some(existing_fabric) = existing_fabric {
-    //     let mut active_model = existing_fabric.into_active_model();
-    //     active_model.name = Set(fabric_data.name.clone());
-    //     active_model.producer = Set(fabric_data.producer.clone());
-    //     active_model.length = Set(fabric_data.length);
-    //     active_model.width = Set(fabric_data.width);
-    //     active_model.costs = Set(fabric_data.costs);
-    //     active_model.foto_path = Set(fabric_data.foto_path.clone());
-    //     active_model.kind_of_fabric_id = Set(fabric_data.kind_of_fabric_id);
-    //     active_model.date_of_purchase = Set(fabric_data.date_of_purchase);
-    //     active_model
-    // } else {
-    //     let mut active_model = fabric_data.into_active_model();
-    //     active_model.id = NotSet;
-    //     active_model
-    // };
-
     log::debug!("active_model is: {:?}", &active_model);
 
     let saved_model = active_model.save(db).await.map_err(|e| e.to_string())?;
@@ -79,6 +75,9 @@ pub async fn upload_fabric_image(
         .await
         .map_err(|e| e.to_string());
     if let Ok(Some(fabric)) = fabric {
+        if let Some(to_delete_path) = &fabric.foto_path {
+            let _ = fs::remove_file(to_delete_path);
+        }
         let mut active_model = fabric.into_active_model();
         active_model.foto_path =
             Set(Some(file_path.to_string_lossy().to_string().clone()));
