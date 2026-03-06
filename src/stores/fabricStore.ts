@@ -34,7 +34,8 @@ export const useFabricStore = defineStore('fabricStore', {
           const path = await fabricApi.saveFabricWithImage(newFabric, fabricImage);
           if (path) newFabric.fotoPath = path;
         }
-        const idx = this.fabrics.indexOf(newFabric);
+        await debug(`new Fabric is ${JSON.stringify(newFabric)}`);
+        const idx = this.fabrics.findIndex((f) => f.id == newFabric.id);
         if (idx < 0) {
           this.fabrics.push(newFabric);
         } else {

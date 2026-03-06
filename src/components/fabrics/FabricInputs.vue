@@ -19,6 +19,7 @@
         v-show="false"
         @update:modelValue="updateFabricImage"
       />
+
       <q-input outlined dense type="text" label="Name" v-model="fabric.name" />
       <q-input type="number" label="Length" v-model.number="fabric.length" />
       <q-input type="number" label="Width" v-model.number="fabric.width" />

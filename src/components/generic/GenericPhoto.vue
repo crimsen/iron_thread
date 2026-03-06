@@ -11,14 +11,16 @@
     </q-img>
     <q-file
       ref="fileInputRef"
+      accept="image/*a"
       v-model="imageFile"
       v-show="false"
+      capture="environment"
       @update:modelValue="updateFabricImage"
     />
   </div>
 </template>
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import type { QFile } from 'quasar';
 
@@ -26,8 +28,12 @@ const modelValue = defineModel<string>();
 
 const fileInputRef = ref<QFile>();
 
+const emit = defineEmits<{
+  'update:file': [data: File | undefined];
+}>();
+
 const imageURL = ref();
-const imageFile = ref();
+const imageFile = ref<File>();
 
 const computedImage = computed(() => {
   return imageURL.value
@@ -53,4 +59,8 @@ const updateFabricImage = (file: File) => {
   //   qImg.value.src = imageURL.value;
   // }
 };
+
+watch(imageFile, (newVal) => {
+  emit('update:file', newVal);
+});
 </script>
