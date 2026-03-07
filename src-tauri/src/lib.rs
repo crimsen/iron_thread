@@ -10,6 +10,7 @@ pub struct DbState {
 
 mod commands;
 mod database;
+mod dtos;
 mod entities;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -25,6 +26,7 @@ pub fn run() {
                     Target::new(TargetKind::Webview),
                 ])
                 .level(log::LevelFilter::Debug)
+                // .level_for("iron_thread", log::LevelFilter::Debug)
                 .build(),
         )
         .plugin(tauri_plugin_sql::Builder::new().build())
@@ -38,6 +40,7 @@ pub fn run() {
             commands::fabric_commands::get_fabrics,
             commands::fabric_commands::save_fabric,
             commands::fabric_commands::upload_fabric_image,
+            commands::fabric_commands::delete_fabric,
             commands::kind_of_fabric_commands::get_kind_of_fabrics,
             commands::kind_of_fabric_commands::save_kind_of_fabric
         ])

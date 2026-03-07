@@ -43,3 +43,12 @@ export const emitSave = async (
   await fabricStore.saveFabric(value, photo);
   if (showDialog) showDialog.value = false;
 };
+
+export const emitDelete = async (
+  fabric: Fabric,
+  showDialog: Ref<boolean> | undefined = undefined,
+) => {
+  const fabricStore = useFabricStore();
+  await fabricStore.deleteFabric(fabric);
+  if (showDialog) showDialog.value = false;
+};

@@ -28,15 +28,22 @@
     </q-card-section>
     <q-card-actions left>
       <q-btn
-        class="glass-btn glass-bg-pirmary glass-text border-radius-all"
-        label="Save"
-        @click="saveModelValue"
-      ></q-btn>
+        v-if="deletable"
+        class="glass-btn glass-bg-negative glass-text border-radius-all"
+        label="Delete"
+        @click="deleteModelValue"
+      >
+      </q-btn>
       <q-btn
         class="glass-btn glass-bg-negative glass-text border-radius-all"
         label="Cancel"
         @click="emits('cancel')"
       />
+      <q-btn
+        class="glass-btn glass-bg-pirmary glass-text border-radius-all"
+        label="Save"
+        @click="saveModelValue"
+      ></q-btn>
     </q-card-actions>
   </q-card>
 </template>
@@ -67,10 +74,12 @@ watch(
 defineProps<{
   schema: FieldConfigFabric[];
   title?: string;
+  deletable?: boolean;
 }>();
 
 const emits = defineEmits<{
   save: [data: T, photo: File | undefined];
+  delete: [data: T];
   cancel: [];
 }>();
 const saveModelValue = () => {
@@ -79,5 +88,8 @@ const saveModelValue = () => {
     `hier bin ich ? ${JSON.stringify(modelValue.value)} ${JSON.stringify(modelCopy.value)}`,
   ).catch(() => {});
   emits('save', modelCopy.value, file.value);
+};
+const deleteModelValue = () => {
+  emits('delete', modelCopy.value);
 };
 </script>

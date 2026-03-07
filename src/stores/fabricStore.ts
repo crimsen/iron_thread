@@ -50,6 +50,18 @@ export const useFabricStore = defineStore('fabricStore', {
         this.isLoading = false;
       }
     },
+    async deleteFabric(fabric: Fabric) {
+      try {
+        const retVal = await fabricApi.deleteFabric(fabric);
+        await debug(`delete ${JSON.stringify(retVal)}`);
+        const idx = this.fabrics.findIndex((f) => f.id == retVal);
+        if (idx >= 0) {
+          this.fabrics.splice(idx, 1);
+        }
+      } catch (e) {
+        await error(`error: ${JSON.stringify(e)}`);
+      }
+    },
   },
 });
 

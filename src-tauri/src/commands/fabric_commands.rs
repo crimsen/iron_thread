@@ -4,7 +4,9 @@ use std::path::Path;
 use crate::dtos::fabric::FabricDTO;
 use crate::DbState;
 use sea_orm::ActiveValue::{NotSet, Set};
-use sea_orm::{ActiveModelTrait, EntityTrait, IntoActiveModel, TryIntoModel};
+use sea_orm::{
+    ActiveModelTrait, EntityTrait, IntoActiveModel, ModelTrait, TryIntoModel,
+};
 use tauri::{AppHandle, Manager, State};
 
 use crate::entities::fabric;
@@ -84,4 +86,23 @@ pub async fn upload_fabric_image(
         let _ = active_model.save(db).await.map_err(|e| e.to_string());
     }
     Ok(file_path.to_string_lossy().into_owned())
+}
+
+#[tauri::command]
+pub async fn delete_fabric(
+    db_state: State<'_, DbState>,
+    fabric_id: i32,
+) -> Result<i32, String> {
+    let db = &db_state.db;
+    let fabric = Fabric::find_by_id(fabric_id)
+        .one(db)
+        .await
+        .map_err(|e| e.to_string());
+    if let Ok(Some(fabric)) = fabric {
+        if let Some(file_path) = &fabric.foto_path {
+            let _ = fs::remove_file(file_path);
+        }
+        let _ = fabric.delete(db).await.map_err(|e| e.to_string());
+    }
+    Ok(fabric_id)
 }

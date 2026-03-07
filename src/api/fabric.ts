@@ -27,4 +27,12 @@ export const fabricApi = {
       console.error('Fehler beim Speichern:', error);
     }
   },
+  async deleteFabric(fabric: Fabric): Promise<number | undefined> {
+    try {
+      const retVal: number = await invoke('delete_fabric', { fabricId: fabric.id });
+      return retVal;
+    } catch (e) {
+      console.error('Fehler beim Löschen:', e);
+    }
+  },
 };

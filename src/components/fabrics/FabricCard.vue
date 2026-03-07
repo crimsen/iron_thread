@@ -24,7 +24,14 @@
     </q-card-section>
   </q-card>
   <q-dialog v-model="showDialog" v-if="modifyFabric">
-    <GenericInputs v-model="modifyFabric" :schema="schema" @save="save" @cancel="cancel" />
+    <GenericInputs
+      v-model="modifyFabric"
+      :schema="schema"
+      @save="save"
+      @cancel="cancel"
+      @delete="deleteFabric"
+      deletable
+    />
   </q-dialog>
 </template>
 
@@ -35,7 +42,7 @@ import { computed, onBeforeMount, ref } from 'vue';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { debug } from '@tauri-apps/plugin-log';
 import GenericInputs from '../generic/GenericInputs.vue';
-import { emitSave, schema, emitCancel } from './models';
+import { emitSave, schema, emitCancel, emitDelete } from './models';
 
 onBeforeMount(async () => {
   await kindOfFabricStore.loadKindOfFabrics();
@@ -73,5 +80,9 @@ const cancel = () => {
 };
 
 const kindOfFabricStore = useKindOfFabricStore();
+
+const deleteFabric = async (fabric: Fabric) => {
+  await emitDelete(fabric, showDialog);
+};
 </script>
 <style lang="scss" scoped></style>
