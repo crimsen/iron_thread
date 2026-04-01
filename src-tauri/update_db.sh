@@ -31,5 +31,6 @@ for file in src/entities/*.rs; do
         # Wir suchen nach der Zeile mit 'pub struct Model' und fügen das Attribut davor ein
         sed -i "/pub struct Model/i #[ts(rename = \"$pascal_name\")]" "$file"
         sed -i "/pub struct Model/i #[ts(export_to=\"../../src/types/${js_file_name}.ts\")]" "$file"
+        rustfmt $file
     fi
 done
