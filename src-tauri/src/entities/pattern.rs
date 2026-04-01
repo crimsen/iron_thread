@@ -29,7 +29,7 @@ impl EntityName for Entity {
 pub struct Model {
     pub id: i32,
     pub name: String,
-    pub designer: String,
+    pub designer: Option<String>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
@@ -62,7 +62,7 @@ impl ColumnTrait for Column {
         match self {
             Self::Id => ColumnType::Integer.def(),
             Self::Name => ColumnType::String(StringLen::None).def(),
-            Self::Designer => ColumnType::String(StringLen::None).def(),
+            Self::Designer => ColumnType::String(StringLen::None).def().null(),
         }
     }
 }

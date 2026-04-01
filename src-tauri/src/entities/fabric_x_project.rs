@@ -18,7 +18,6 @@ impl EntityName for Entity {
     PartialEq,
     DeriveModel,
     DeriveActiveModel,
-    Eq,
     Serialize,
     Deserialize,
     ts_rs :: TS,
@@ -29,12 +28,14 @@ impl EntityName for Entity {
 pub struct Model {
     pub fabric_id: i32,
     pub project_id: i32,
+    pub fabric_length: Option<f32>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
     FabricId,
     ProjectId,
+    FabricLength,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -62,6 +63,7 @@ impl ColumnTrait for Column {
         match self {
             Self::FabricId => ColumnType::Integer.def(),
             Self::ProjectId => ColumnType::Integer.def(),
+            Self::FabricLength => ColumnType::Float.def().null(),
         }
     }
 }

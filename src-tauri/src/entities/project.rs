@@ -29,12 +29,14 @@ impl EntityName for Entity {
 pub struct Model {
     pub id: i32,
     pub name: String,
+    pub size: Option<i32>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
     Id,
     Name,
+    Size,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -61,6 +63,7 @@ impl ColumnTrait for Column {
         match self {
             Self::Id => ColumnType::Integer.def(),
             Self::Name => ColumnType::String(StringLen::None).def(),
+            Self::Size => ColumnType::Integer.def().null(),
         }
     }
 }
