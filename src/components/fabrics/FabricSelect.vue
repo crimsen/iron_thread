@@ -24,7 +24,10 @@ onBeforeMount(async () => {
 const filterText = ref('');
 
 const options = computed(() => {
-  const all = fabricStore.fabrics;
+  let all = fabricStore.fabrics;
+  if (props.forbiddenToShow) {
+    all = all.filter((p) => !props.forbiddenToShow?.some((p1) => p.id == p1));
+  }
   if (!filterText.value) return all;
 
   const needle = filterText.value.toLowerCase();
@@ -37,8 +40,9 @@ function filterFn(value: string, update: (callback: () => void) => void) {
   });
 }
 const model = defineModel<number | null>();
-defineProps<{
+const props = defineProps<{
   readonly?: boolean;
+  forbiddenToShow?: Array<number | null>;
 }>();
 
 const fabricStore = useFabricStore();

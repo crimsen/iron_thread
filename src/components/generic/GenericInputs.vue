@@ -10,6 +10,15 @@
           v-else-if="field.type == 'KindOfFabricSelect'"
           v-model="modelCopy[field.key]"
         />
+        <ModifyFabrics
+          v-else-if="field.type == 'ModifyFabrics'"
+          v-model="modelCopy[field.key]"
+          :label="field.label"
+          :type="field.type"
+          :readonly="field.readonly"
+          :classes="'column'"
+          :subclass="'q-gutter-sm'"
+        />
         <q-input
           v-else-if="field.type == 'number'"
           v-model.number="modelCopy[field.key]"
@@ -48,11 +57,17 @@
   </q-card>
 </template>
 <script setup lang="ts" generic="T extends Record<string, any>">
-import { ref, watch } from 'vue';
+import { onBeforeMount, ref, watch } from 'vue';
 import KindOfFabricSelect from '../kindOfFabric/KindOfFabricSelect.vue';
+import ModifyFabrics from '../projects/ModifyFabrics.vue';
 import GenericPhoto from './GenericPhoto.vue';
-import type { FieldConfigFabric } from './genericType';
-import { debug } from '@tauri-apps/plugin-log';
+import type { FieldConfigFabric, FieldConfigProject } from './genericType';
+import { debug, info } from '@tauri-apps/plugin-log';
+
+onBeforeMount(async () => {
+  await info(`mop: ${JSON.stringify(modelValue.value)}`);
+  await info(`schema: ${JSON.stringify(props.schema)}`);
+});
 
 const modelValue = defineModel<T>({ required: true });
 const modelCopy = ref<T>({ ...modelValue.value });
@@ -71,8 +86,8 @@ watch(
   { deep: true },
 );
 
-defineProps<{
-  schema: FieldConfigFabric[];
+const props = defineProps<{
+  schema: FieldConfigFabric[] | FieldConfigProject[];
   title?: string;
   deletable?: boolean;
 }>();

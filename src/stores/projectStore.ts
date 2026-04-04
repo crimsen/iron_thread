@@ -1,6 +1,6 @@
 import { acceptHMRUpdate, defineStore } from 'pinia';
 import { projectApi } from 'src/api/project';
-import type { Project } from 'src/types/project';
+import type { Project } from 'src/types/extendenProject';
 import { debug, error } from '@tauri-apps/plugin-log';
 
 export const useProjectStore = defineStore('projectStore', {
@@ -24,6 +24,7 @@ export const useProjectStore = defineStore('projectStore', {
         await debug('finish loading Projects');
         this.isLoading = false;
       }
+      this.projects.forEach((p) => (p.fabricIds = []));
     },
     async saveProject(project: Project) {
       this.isLoading = true;

@@ -9,7 +9,7 @@
   </q-item>
 </template>
 <script setup lang="ts">
-import type { Project } from 'src/types/project';
+import type { Project } from 'src/types/extendenProject';
 
 defineProps<{
   project: Project;

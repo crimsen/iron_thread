@@ -1,4 +1,4 @@
-import type { Project } from 'src/types/project';
+import type { Project } from 'src/types/extendenProject';
 import type { FieldConfigProject } from '../generic/genericType';
 import type { Ref } from 'vue';
 import { useProjectStore } from 'src/stores/projectStore';
@@ -10,18 +10,14 @@ export const schema: FieldConfigProject[] = [
   // { key: 'fotoPath', label: 'Foto', type: 'fotoPath' },
   { key: 'name', label: 'Name', type: 'text' },
   { key: 'size', label: 'Size', type: 'number' },
-  // { key: 'length', label: 'Length', type: 'number' },
-  // { key: 'width', label: 'Width', type: 'number' },
-  // { key: 'kindOfProjectId', label: 'Kind of Project', type: 'KindOfProjectSelect' },
-  // { key: 'costs', label: 'Costs', type: 'number' },
-  // { key: 'producer', label: 'Producer', type: 'text' },
-  // { key: 'dateOfPurchase', label: 'Date of purchase', type: 'date' },
+  { key: 'fabricIds', label: 'Fabrics', type: 'ModifyFabrics' },
 ];
 
 export const emptyProject: Project = {
   id: -1,
   name: '',
   size: null,
+  fabricIds: [],
 };
 
 export const emitCancel = (

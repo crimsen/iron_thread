@@ -1,5 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
-import type { Project } from 'src/types/project.ts';
+import type { Project } from 'src/types/extendenProject';
 export const projectApi = {
   async getAll(): Promise<Project[]> {
     return await invoke<Project[]>('get_projects');

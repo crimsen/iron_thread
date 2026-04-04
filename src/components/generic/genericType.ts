@@ -7,6 +7,6 @@ export type FieldConfigFabric = {
 export type FieldConfigProject = {
   key: string;
   label: string;
-  type: 'text' | 'number' | 'date' | 'fotoPath' | 'KindOfFabricSelect';
+  type: 'text' | 'number' | 'ModifyFabrics';
   readonly?: boolean;
 };
