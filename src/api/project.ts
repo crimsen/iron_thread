@@ -1,12 +1,27 @@
 import { invoke } from '@tauri-apps/api/core';
+import { useFabricXProject } from 'src/stores/fabricXProject';
 import type { Project } from 'src/types/extendenProject';
+import type { FabricXProject } from 'src/types/fabricXProject';
+
 export const projectApi = {
   async getAll(): Promise<Project[]> {
     return await invoke<Project[]>('get_projects');
   },
   async save(project: Project): Promise<Project> {
     if (typeof project.id != 'number') project.id = -1;
-    return await invoke<Project>('save_project', { projectData: project });
+    const _project = await invoke<Project>('save_project', { projectData: project });
+    const fabricXProjectStore = useFabricXProject();
+    await Promise.all(
+      project.fabricIds.map(async (p) => {
+        const fabricXProject: FabricXProject = {
+          fabricId: <number>p,
+          projectId: _project.id,
+          fabricLength: null,
+        };
+        return fabricXProjectStore.saveFabricXProject(fabricXProject);
+      }),
+    );
+    return _project;
   },
   async saveProjectWithImage(project: Project, projectImage: File): Promise<string | undefined> {
     // 1. Datei in Bytes umwandeln

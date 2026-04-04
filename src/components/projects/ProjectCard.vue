@@ -37,7 +37,7 @@ import { computed, onBeforeMount, ref } from 'vue';
 import GenericInputs from '../generic/GenericInputs.vue';
 // TODO: emits must be rewrite
 // import { emitSave, schema, emitCancel, emitDelete } from './models';
-import { schema, emitCancel } from './models';
+import { schema, emitCancel, emitSave } from './models';
 import { info } from '@tauri-apps/plugin-log';
 
 onBeforeMount(async () => {
@@ -76,7 +76,7 @@ const image = computed(() => {
 /* eslint-disable */
 // TODO: does not work yet.
 const save = async (project: Project, file: File | undefined = undefined) => {
-  // await emitSave(project, file, showDialog);
+  await emitSave(project, file, showDialog);
   await info('click save');
 };
 const cancel = () => {
