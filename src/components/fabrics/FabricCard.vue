@@ -49,7 +49,7 @@ onBeforeMount(async () => {
   if (props.fabric.fotoPath) await debug(props.fabric.fotoPath);
 });
 
-const props = defineProps<{ fabric: Fabric }>();
+const props = defineProps<{ fabric: Fabric; readonly?: boolean }>();
 
 const kindOfFabric = computed(() => {
   return kindOfFabricStore.getKindOfFabricById(props.fabric.kindOfFabricId || -1);
@@ -59,6 +59,7 @@ const showDialog = ref(false);
 const modifyFabric = ref<Fabric>();
 
 const openFabric = () => {
+  if (props.readonly) return;
   modifyFabric.value = props.fabric;
   showDialog.value = true;
 };

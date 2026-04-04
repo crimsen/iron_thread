@@ -11,12 +11,23 @@
     emit-value
     @filter="filterFn"
     input-debounce="0"
-  ></q-select>
+  >
+    <template v-slot:selected-item="scope">
+      <fabric-card :fabric="<Fabric>scope.opt" readonly />
+    </template>
+    <template v-slot:option="scope">
+      <div v-bind="scope.itemProps">
+        <fabric-card :fabric="<Fabric>scope.opt" readonly />
+      </div>
+    </template>
+  </q-select>
 </template>
 
 <script setup lang="ts">
 import { useFabricStore } from 'src/stores/fabricStore';
 import { computed, onBeforeMount, ref } from 'vue';
+import FabricCard from './FabricCard.vue';
+import type { Fabric } from 'src/types/fabric';
 
 onBeforeMount(async () => {
   await fabricStore.loadFabrics();
