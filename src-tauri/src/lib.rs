@@ -42,7 +42,9 @@ pub fn run() {
             commands::fabric_commands::upload_fabric_image,
             commands::fabric_commands::delete_fabric,
             commands::kind_of_fabric_commands::get_kind_of_fabrics,
-            commands::kind_of_fabric_commands::save_kind_of_fabric
+            commands::kind_of_fabric_commands::save_kind_of_fabric,
+            commands::project_commands::get_projects,
+            commands::project_commands::save_project
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

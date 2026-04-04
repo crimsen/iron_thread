@@ -9,8 +9,11 @@
     <q-drawer class="glass-drawer" v-model="leftDrawerOpen">
       <q-list>
         <q-item-label header>Navagation </q-item-label>
-        <q-item clickable v-ripple :to="{ name: 'main' }">
+        <q-item clickable v-ripple :to="{ name: 'fabrics' }">
           <q-item-section>Fabrics</q-item-section>
+        </q-item>
+        <q-item clickable v-ripple :to="{ name: 'projects' }">
+          <q-item-section>Projects </q-item-section>
         </q-item>
       </q-list>
     </q-drawer>

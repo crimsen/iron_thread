@@ -19,7 +19,7 @@ impl From<ProjectDTO> for ActiveModel {
     fn from(value: ProjectDTO) -> Self {
         Self {
             id: if value.id < 0 { NotSet } else { Set(value.id) },
-            name: Set(value.name),
+            name: NotSet,
             size: Set(value.size),
         }
     }
