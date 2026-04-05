@@ -10,14 +10,14 @@ export const schema: FieldConfigProject[] = [
   // { key: 'fotoPath', label: 'Foto', type: 'fotoPath' },
   { key: 'name', label: 'Name', type: 'text' },
   { key: 'size', label: 'Size', type: 'number' },
-  { key: 'fabricIds', label: 'Fabrics', type: 'ModifyFabrics' },
+  { key: 'fabrics', label: 'Fabrics', type: 'ModifyFabrics' },
 ];
 
 export const emptyProject: Project = {
   id: -1,
   name: '',
   size: null,
-  fabricIds: [],
+  fabrics: [],
 };
 
 export const emitCancel = (

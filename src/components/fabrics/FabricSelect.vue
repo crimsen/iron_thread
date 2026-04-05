@@ -1,6 +1,6 @@
 <template>
   <q-select
-    v-model="model"
+    v-model="overwriteModel"
     option-label="name"
     option-value="id"
     :options="options"
@@ -25,8 +25,13 @@
           size="sm"
           @click.stop.prevent="scope.removeAtIndex(scope.index)"
         />
-        <q-card-section class="q-pa-xs">
-          <q-input type="number" label="Length" v-model="length" />
+        <q-card-section class="q-pa-xs" v-if="model && model[scope.index]">
+          <q-input
+            type="number"
+            label="Length"
+            :model-value="(<{ fabricId: number; length?: number }>model[scope.index]).length || 0"
+            @update:model-value="(val) => updateLength(scope.index, val)"
+          />
         </q-card-section>
       </q-card>
     </template>
@@ -51,7 +56,11 @@ onBeforeMount(async () => {
   await fabricStore.loadFabrics();
 });
 const filterText = ref('');
-const length = ref();
+const updateLength = (index: number, val: number | string | null) => {
+  if (model.value && model.value?.length > 0 && model.value[index] && val) {
+    model.value[index].length = <number>val;
+  }
+};
 
 const options = computed(() => {
   let all = fabricStore.fabrics;
@@ -69,7 +78,21 @@ function filterFn(value: string, update: (callback: () => void) => void) {
     filterText.value = value;
   });
 }
-const model = defineModel<Array<number> | null>();
+const model = defineModel<Array<{ fabricId: number; length?: number | undefined }> | null>();
+const overwriteModel = computed({
+  get: () => model.value?.map(({ fabricId }) => fabricId),
+  set: (val: Array<number>) => {
+    const retVal = model.value?.filter((m) => val.includes(m.fabricId)) || [];
+    const notIncluded = val.filter((v) => {
+      if (retVal.findIndex((r) => r.fabricId == v) >= 0) return false;
+      return true;
+    });
+    notIncluded.forEach((v) => {
+      retVal.push({ fabricId: v, length: undefined });
+    });
+    model.value = retVal;
+  },
+});
 const props = defineProps<{
   readonly?: boolean;
   forbiddenToShow?: Array<number | null>;

@@ -1,5 +1,5 @@
 import type { Project as OP } from './project';
 
 export type Project = OP & {
-  fabricIds: Array<number | null>;
+  fabrics: Array<{ fabric_id: number; length: number } | null>;
 };
