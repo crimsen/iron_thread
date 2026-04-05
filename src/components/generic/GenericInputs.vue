@@ -10,15 +10,21 @@
           v-else-if="field.type == 'KindOfFabricSelect'"
           v-model="modelCopy[field.key]"
         />
-        <ModifyFabrics
+        <FabricSelect
           v-else-if="field.type == 'ModifyFabrics'"
           v-model="modelCopy[field.key]"
           :label="field.label"
           :type="field.type"
-          :readonly="field.readonly"
-          :classes="'column'"
-          :subclass="'q-gutter-sm'"
         />
+        <!-- <ModifyFabrics -->
+        <!--   v-else-if="field.type == 'ModifyFabrics'" -->
+        <!--   v-model="modelCopy[field.key]" -->
+        <!--   :label="field.label" -->
+        <!--   :type="field.type" -->
+        <!--   :readonly="field.readonly" -->
+        <!--   :classes="'column'" -->
+        <!--   :subclass="'q-gutter-sm'" -->
+        <!-- /> -->
         <q-input
           v-else-if="field.type == 'number'"
           v-model.number="modelCopy[field.key]"
@@ -59,10 +65,11 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
 import { onBeforeMount, ref, watch } from 'vue';
 import KindOfFabricSelect from '../kindOfFabric/KindOfFabricSelect.vue';
-import ModifyFabrics from '../projects/ModifyFabrics.vue';
+// import ModifyFabrics from '../projects/ModifyFabrics.vue';
 import GenericPhoto from './GenericPhoto.vue';
 import type { FieldConfigFabric, FieldConfigProject } from './genericType';
 import { debug, info } from '@tauri-apps/plugin-log';
+import FabricSelect from '../fabrics/FabricSelect.vue';
 
 onBeforeMount(async () => {
   await info(`mop: ${JSON.stringify(modelValue.value)}`);
