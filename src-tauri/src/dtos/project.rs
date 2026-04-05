@@ -1,6 +1,6 @@
 use sea_orm::ActiveValue::{NotSet, Set};
 use serde::{Deserialize, Serialize};
-use serde_with::{serde_as, NoneAsEmptyString, PickFirst};
+use serde_with::{serde_as, DefaultOnError, NoneAsEmptyString, PickFirst};
 
 use crate::entities::project::ActiveModel;
 
@@ -13,6 +13,9 @@ pub struct ProjectDTO {
     #[serde_as(as = "PickFirst<(_, NoneAsEmptyString)>")]
     #[serde(default)]
     pub size: Option<i32>,
+    #[serde_as(as = "DefaultOnError")]
+    #[serde(default)]
+    pub fabric_ids: Vec<i32>,
 }
 
 impl From<ProjectDTO> for ActiveModel {

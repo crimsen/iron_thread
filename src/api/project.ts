@@ -10,17 +10,17 @@ export const projectApi = {
   async save(project: Project): Promise<Project> {
     if (typeof project.id != 'number') project.id = -1;
     const _project = await invoke<Project>('save_project', { projectData: project });
-    const fabricXProjectStore = useFabricXProject();
-    await Promise.all(
-      project.fabricIds.map(async (p) => {
-        const fabricXProject: FabricXProject = {
-          fabricId: <number>p,
-          projectId: _project.id,
-          fabricLength: null,
-        };
-        return fabricXProjectStore.saveFabricXProject(fabricXProject);
-      }),
-    );
+    // const fabricXProjectStore = useFabricXProject();
+    // await Promise.all(
+    //   project.fabricIds.map(async (p) => {
+    //     const fabricXProject: FabricXProject = {
+    //       fabricId: <number>p,
+    //       projectId: _project.id,
+    //       fabricLength: null,
+    //     };
+    //     return fabricXProjectStore.saveFabricXProject(fabricXProject);
+    //   }),
+    // );
     return _project;
   },
   async saveProjectWithImage(project: Project, projectImage: File): Promise<string | undefined> {
