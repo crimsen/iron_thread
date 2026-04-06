@@ -1,16 +1,18 @@
+use crate::entities::prelude::FabricXProject;
+use crate::entities::prelude::Project;
 use sea_orm::ColumnTrait;
+use sea_orm::EntityTrait;
 use sea_orm::QueryFilter;
 use sea_orm::{
     ActiveValue::{NotSet, Set},
-    DbConn, EntityTrait, FromQueryResult,
+    DbConn, FromQueryResult,
 };
 use serde::{Deserialize, Serialize};
 use serde_with::{serde_as, DefaultOnError, NoneAsEmptyString, PickFirst};
 
 use crate::{
     entities::{
-        fabric, fabric_x_project,
-        prelude::{Fabric, FabricXProject, Project},
+        fabric_x_project,
         project::{ActiveModel, Model},
     },
     error::MyError,

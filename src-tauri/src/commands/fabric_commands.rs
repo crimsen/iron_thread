@@ -4,7 +4,7 @@ use std::path::Path;
 use crate::dtos::fabric::FabricDTO;
 use crate::error::MyError;
 use crate::DbState;
-use sea_orm::ActiveValue::{NotSet, Set};
+use sea_orm::ActiveValue::Set;
 use sea_orm::{
     ActiveModelTrait, EntityTrait, IntoActiveModel, ModelTrait, TryIntoModel,
 };

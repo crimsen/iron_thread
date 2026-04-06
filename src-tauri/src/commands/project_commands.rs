@@ -6,9 +6,9 @@ use sea_orm::{
 };
 use tauri::State;
 
-use crate::dtos::project::{FabricsArrayWithLength, ProjectDTO};
+use crate::dtos::project::ProjectDTO;
 use crate::entities::prelude::{Fabric, FabricXProject, Project};
-use crate::entities::{fabric, fabric_x_project, project};
+use crate::entities::{fabric_x_project, project};
 use crate::error::MyError;
 use crate::DbState;
 
