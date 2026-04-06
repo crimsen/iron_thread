@@ -1,14 +1,33 @@
+use sea_orm::ColumnTrait;
 use sea_orm::{
     prelude::Date,
     ActiveValue::{NotSet, Set},
+    DbConn, EntityTrait, FromQueryResult, QueryFilter,
 };
 use serde::{Deserialize, Serialize};
-use serde_with::{serde_as, NoneAsEmptyString, PickFirst};
+use serde_with::{serde_as, DefaultOnError, NoneAsEmptyString, PickFirst};
 
-use crate::entities::fabric::ActiveModel;
+use crate::entities::{
+    fabric_x_project,
+    prelude::{Fabric, FabricXProject},
+};
+use crate::{
+    entities::fabric::{ActiveModel, Model},
+    error::MyError,
+};
 
 #[serde_as]
-#[derive(Debug, Deserialize, Serialize, Clone)]
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Copy)]
+#[serde(rename_all = "camelCase")]
+pub struct ProjectArrayWithLength {
+    pub project_id: i32,
+    #[serde_as(as = "PickFirst<(_, NoneAsEmptyString)>")]
+    #[serde(default)]
+    pub length: Option<f32>,
+}
+
+#[serde_as]
+#[derive(Debug, Deserialize, Serialize, Clone, FromQueryResult, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct FabricDTO {
     pub id: i32,
@@ -36,6 +55,10 @@ pub struct FabricDTO {
     #[serde_as(as = "NoneAsEmptyString")]
     #[serde(default)]
     pub date_of_purchase: Option<Date>,
+    #[sea_orm(skip)]
+    #[serde_as(as = "DefaultOnError")]
+    #[serde(default)]
+    pub projects: Vec<ProjectArrayWithLength>,
 }
 
 impl From<FabricDTO> for ActiveModel {
@@ -51,5 +74,66 @@ impl From<FabricDTO> for ActiveModel {
             kind_of_fabric_id: Set(value.kind_of_fabric_id),
             date_of_purchase: Set(value.date_of_purchase),
         }
+    }
+}
+
+impl From<Model> for FabricDTO {
+    fn from(value: Model) -> Self {
+        Self {
+            id: value.id,
+            name: value.name,
+            length: value.length,
+            width: value.width,
+            costs: value.costs,
+            foto_path: value.foto_path,
+            producer: value.producer,
+            kind_of_fabric_id: value.kind_of_fabric_id,
+            date_of_purchase: value.date_of_purchase,
+            ..Default::default()
+        }
+    }
+}
+
+impl FabricDTO {
+    pub async fn find_by_id(db: &DbConn, id: i32) -> Result<Self, MyError> {
+        let mut fabric_base = Fabric::find_by_id(id)
+            .into_model::<FabricDTO>()
+            .one(db)
+            .await?
+            .ok_or_else(|| MyError::Validation("fabric not found".into()))?;
+        let relations = FabricXProject::find()
+            .filter(fabric_x_project::Column::FabricId.eq(fabric_base.id))
+            .all(db)
+            .await?;
+        fabric_base.projects = relations
+            .into_iter()
+            .map(|rel| ProjectArrayWithLength {
+                project_id: rel.project_id,
+                length: rel.fabric_length,
+            })
+            .collect();
+        Ok(fabric_base)
+    }
+
+    pub async fn find_all(db: &DbConn) -> Result<Vec<Self>, MyError> {
+        let fabrics_with_projects: Vec<(Model, Vec<fabric_x_project::Model>)> =
+            Fabric::find()
+                .find_with_related(FabricXProject)
+                .all(db)
+                .await?;
+        Ok(fabrics_with_projects
+            .into_iter()
+            .map(|(_fabric, _fabric_x_project)| {
+                let mut fabric = FabricDTO::from(_fabric);
+                fabric.projects = _fabric_x_project
+                    .into_iter()
+                    .map(|_rel| ProjectArrayWithLength {
+                        project_id: _rel.project_id,
+                        length: _rel.fabric_length,
+                    })
+                    .collect();
+                fabric
+            })
+            .collect())
     }
 }

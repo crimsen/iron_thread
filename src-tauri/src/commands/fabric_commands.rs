@@ -2,6 +2,7 @@ use std::fs;
 use std::path::Path;
 
 use crate::dtos::fabric::FabricDTO;
+use crate::error::MyError;
 use crate::DbState;
 use sea_orm::ActiveValue::{NotSet, Set};
 use sea_orm::{
@@ -16,9 +17,9 @@ use log;
 #[tauri::command]
 pub async fn get_fabrics(
     db: State<'_, DbState>,
-) -> Result<Vec<fabric::Model>, String> {
+) -> Result<Vec<FabricDTO>, MyError> {
     log::debug!("get_all fabrics");
-    Fabric::find().all(&db.db).await.map_err(|e| e.to_string())
+    FabricDTO::find_all(&db.db).await
 }
 
 #[tauri::command]
