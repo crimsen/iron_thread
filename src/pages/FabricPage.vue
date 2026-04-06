@@ -1,5 +1,4 @@
 <template>
-  <!--<q-page class="row items-center justify-evenly"> hi </q-page>-->
   <q-page class="column">
     <FabricsList />
     <q-dialog v-model="showAddFabricDialog">

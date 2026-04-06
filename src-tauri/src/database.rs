@@ -1,5 +1,5 @@
 use migration::MigratorTrait;
-use sea_orm::{Database, DatabaseConnection, DbErr};
+use sea_orm::{ConnectOptions, Database, DatabaseConnection, DbErr};
 use tauri::Manager;
 
 pub async fn init(app: &tauri::App) -> Result<DatabaseConnection, DbErr> {
@@ -13,7 +13,10 @@ pub async fn init(app: &tauri::App) -> Result<DatabaseConnection, DbErr> {
     log::info!("db_path: {:?}", &db_path);
     let db_url = format!("sqlite:{}?mode=rwc", db_path.display());
 
-    let db = Database::connect(db_url).await?;
+    let mut opt = ConnectOptions::new(db_url);
+    opt.sqlx_logging(false);
+    let db = Database::connect(opt).await?;
+
     migration::Migrator::up(&db, None).await?;
     Ok(db)
 }
