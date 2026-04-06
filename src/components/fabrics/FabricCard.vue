@@ -37,7 +37,7 @@
 
 <script setup lang="ts">
 import { useKindOfFabricStore } from 'src/stores/kindOfFabricStore';
-import type { Fabric } from 'src/types/fabric';
+import type { Fabric } from 'src/types/extendedFabric';
 import { computed, onBeforeMount, ref } from 'vue';
 import { convertFileSrc } from '@tauri-apps/api/core';
 import { debug } from '@tauri-apps/plugin-log';

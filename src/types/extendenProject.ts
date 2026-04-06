@@ -1,5 +1,7 @@
 import type { Project as OP } from './project';
 
+export type FabricForProject = { fabric_id: number; length?: number };
+
 export type Project = OP & {
-  fabrics: Array<{ fabric_id: number; length: number } | null>;
+  fabrics: Array<FabricForProject>;
 };

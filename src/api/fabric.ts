@@ -1,5 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
-import type { Fabric } from 'src/types/fabric.ts';
+import type { Fabric } from 'src/types/extendedFabric';
 export const fabricApi = {
   async getAll(): Promise<Fabric[]> {
     return await invoke<Fabric[]>('get_fabrics');

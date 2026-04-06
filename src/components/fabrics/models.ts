@@ -1,4 +1,4 @@
-import type { Fabric } from 'src/types/fabric';
+import type { Fabric } from 'src/types/extendedFabric';
 import type { FieldConfigFabric } from '../generic/genericType';
 import type { Ref } from 'vue';
 import { useFabricStore } from 'src/stores/fabricStore';
@@ -24,6 +24,7 @@ export const emptyFabric: Fabric = {
   producer: null,
   kindOfFabricId: null,
   dateOfPurchase: null,
+  projects: [],
 };
 
 export const emitCancel = (

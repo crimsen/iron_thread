@@ -1,6 +1,6 @@
 import { acceptHMRUpdate, defineStore } from 'pinia';
 import { fabricApi } from 'src/api/fabric';
-import type { Fabric } from 'src/types/fabric';
+import type { Fabric } from 'src/types/extendedFabric';
 import { debug, error } from '@tauri-apps/plugin-log';
 
 export const useFabricStore = defineStore('fabricStore', {

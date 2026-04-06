@@ -1,14 +1,7 @@
 use log;
-use sea_orm::ActiveValue::Set;
-use sea_orm::{
-    sea_query::OnConflict, ActiveModelTrait, ColumnTrait, EntityTrait,
-    ModelTrait, QueryFilter, TryIntoModel,
-};
 use tauri::State;
 
 use crate::dtos::project::ProjectDTO;
-use crate::entities::prelude::{Fabric, FabricXProject, Project};
-use crate::entities::{fabric_x_project, project};
 use crate::error::MyError;
 use crate::DbState;
 

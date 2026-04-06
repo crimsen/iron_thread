@@ -26,7 +26,7 @@ import FabricsList from 'src/components/fabrics/FabricsList.vue';
 import GenericInputs from 'src/components/generic/GenericInputs.vue';
 import { emitCancel, emitSave, emptyFabric, schema } from 'src/components/fabrics/models';
 import { ref } from 'vue';
-import type { Fabric } from 'src/types/fabric';
+import type { Fabric } from 'src/types/extendedFabric';
 
 const fab = ref({ ...emptyFabric });
 

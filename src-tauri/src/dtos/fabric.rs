@@ -1,12 +1,16 @@
-use sea_orm::ColumnTrait;
+use std::{fs, path::Path};
+
+use migration::OnConflict;
 use sea_orm::{
     prelude::Date,
     ActiveValue::{NotSet, Set},
     DbConn, EntityTrait, FromQueryResult, QueryFilter,
 };
+use sea_orm::{ActiveModelTrait, ColumnTrait};
 use serde::{Deserialize, Serialize};
 use serde_with::{serde_as, DefaultOnError, NoneAsEmptyString, PickFirst};
 
+use crate::entities::fabric;
 use crate::entities::{
     fabric_x_project,
     prelude::{Fabric, FabricXProject},
@@ -135,5 +139,84 @@ impl FabricDTO {
                 fabric
             })
             .collect())
+    }
+
+    pub async fn save(self, db: &DbConn) -> Result<Self, MyError> {
+        let active_model: fabric::ActiveModel = self.clone().into();
+        let saved_model = if active_model.id == NotSet {
+            active_model.insert(db).await?
+        } else {
+            // TODO: logic to manage fotos must be outer. not only fabrics use fotos
+            match (
+                self.clone().foto_path,
+                FabricDTO::find_by_id(db, self.id).await?.foto_path,
+            ) {
+                (None, Some(path)) => {
+                    let _ = fs::remove_file(Path::new(&path));
+                }
+                (Some(path_a), Some(path_b)) => {
+                    if path_a != path_b {
+                        let _ = fs::remove_file(Path::new(&path_b));
+                    }
+                }
+                (_, _) => {}
+            }
+            active_model.update(db).await?
+        };
+        let final_id = saved_model.id;
+        if self.id >= 0 {
+            let current_relations = FabricXProject::find()
+                .filter(fabric_x_project::Column::FabricId.eq(self.id))
+                .all(db)
+                .await?;
+            let to_delete_relations: Vec<i32> = current_relations
+                .iter()
+                .filter_map(|f| {
+                    if !self
+                        .clone()
+                        .projects
+                        .into_iter()
+                        .map(|_f| _f.project_id)
+                        .collect::<Vec<i32>>()
+                        .contains(&f.project_id)
+                    {
+                        Some(f.project_id)
+                    } else {
+                        None
+                    }
+                })
+                .collect();
+            if !to_delete_relations.is_empty() {
+                FabricXProject::delete_many()
+                    .filter(fabric_x_project::Column::FabricId.eq(self.id))
+                    .filter(
+                        fabric_x_project::Column::ProjectId
+                            .is_in(to_delete_relations),
+                    )
+                    .exec(db)
+                    .await?;
+            }
+        }
+
+        for p in self.projects {
+            let model = fabric_x_project::ActiveModel {
+                fabric_id: Set(final_id),
+                project_id: Set(p.project_id),
+                fabric_length: Set(p.length),
+            };
+            FabricXProject::insert(model)
+                .on_conflict(
+                    OnConflict::columns([
+                        fabric_x_project::Column::ProjectId,
+                        fabric_x_project::Column::FabricId,
+                    ])
+                    .update_column(fabric_x_project::Column::FabricLength)
+                    .to_owned(),
+                )
+                .exec(db)
+                .await?;
+        }
+
+        FabricDTO::find_by_id(db, final_id).await
     }
 }
