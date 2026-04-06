@@ -12,6 +12,7 @@ mod commands;
 mod database;
 mod dtos;
 mod entities;
+mod error;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
