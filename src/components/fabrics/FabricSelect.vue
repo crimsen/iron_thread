@@ -14,17 +14,22 @@
     input-debounce="0"
   >
     <template v-slot:selected-item="scope">
-      <q-card class="column items-center q-ma-sm bg-transparent">
-        <generic-photo :model-value="scope.opt.fotoPath" readonly thumpnail>
-          <!-- style="z-index: 999; pointer-events: auto" -->
-        </generic-photo>
-        <q-btn
-          class="class-btn glass-bg-negative absolute-top-right q-ma-sm"
-          icon="delete"
-          round
-          size="sm"
-          @click.stop.prevent="scope.removeAtIndex(scope.index)"
-        />
+      <q-card class="column items-center q-ma-sm bg-transparent" @click.stop.prevent flat>
+        <q-card-section>
+          <generic-photo :model-value="scope.opt.fotoPath" readonly thumpnail> </generic-photo>
+          <q-btn
+            class="class-btn glass-bg-negative absolute-top-right q-ma-sm"
+            icon="delete"
+            round
+            size="sm"
+            @click.stop.prevent="scope.removeAtIndex(scope.index)"
+          />
+          <q-card
+            v-if="scope.opt.name"
+            class="absolute-bottom-right text-subtitle2 text-white glass-bg-accent q-px-xs"
+            >{{ scope.opt.name }}</q-card
+          >
+        </q-card-section>
         <q-card-section class="q-pa-xs" v-if="model && model[scope.index]">
           <q-input
             type="number"
@@ -37,10 +42,27 @@
     </template>
     <template v-slot:option="scope">
       <q-item v-bind="scope.itemProps">
+        <!-- :class="scope.selected ? 'glass-bg-positive' : ''" -->
         <q-item-section>
-          <generic-photo :model-value="scope.opt.fotoPath" readonly thumpnail />
+          <!-- <generic-photo :model-value="scope.opt.fotoPath" readonly thumpnail /> -->
+          <q-card
+            :class="`column items-center q-ma-sm bg-transparent ${scope.selected ? 'glass-bg-positive' : ''}`"
+            flat
+          >
+            <q-card-section>
+              <generic-photo :model-value="scope.opt.fotoPath" readonly thumpnail> </generic-photo>
+              <q-card
+                v-if="scope.opt.name"
+                class="absolute-bottom-right text-subtitle2 text-white glass-bg-accent q-px-xs"
+                >{{ scope.opt.name }}</q-card
+              >
+            </q-card-section>
+          </q-card>
         </q-item-section>
       </q-item>
+    </template>
+    <template v-slot:selected>
+      <div>test</div>
     </template>
   </q-select>
 </template>
