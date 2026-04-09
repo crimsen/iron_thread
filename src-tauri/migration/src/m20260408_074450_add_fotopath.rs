@@ -6,6 +6,7 @@ pub struct Migration;
 #[async_trait::async_trait]
 impl MigrationTrait for Migration {
     async fn up(&self, manager: &SchemaManager) -> Result<(), DbErr> {
+        let db = manager.get_connection();
         manager
             .create_table(
                 Table::create()
@@ -25,47 +26,103 @@ impl MigrationTrait for Migration {
                     .to_owned(),
             )
             .await?;
+        db.execute_unprepared("PRAGMA foreign_keys = OFF").await?;
+        db.execute_unprepared("INSERT INTO foto_path (path) SELECT foto_path from fabric WHERE foto_path IS NOT NULL").await?;
         manager
-            .alter_table(
-                Table::alter()
-                    .table(Fabric::Table)
-                    .add_column(
-                        ColumnDef::new(Fabric::FotoPathId).integer().null(),
-                    )
-                    .add_foreign_key(
-                        TableForeignKey::new()
+            .create_table(
+                Table::create()
+                    .table("fabric_new")
+                    .if_not_exists()
+                    .col(pk_auto(Fabric::Id))
+                    .col(string_null(Fabric::Name))
+                    .col(float_null(Fabric::Length))
+                    .col(float_null(Fabric::Width))
+                    .col(float_null(Fabric::Costs))
+                    .col(string_null(Fabric::Producer))
+                    .col(integer_null(Fabric::KindOfFabricId))
+                    .col(date_null(Fabric::DateOfPurchase))
+                    .col(integer_null(Fabric::FotoPathId))
+                    .foreign_key(
+                        ForeignKey::create()
                             .name("fk-fabric-foto-path-id")
-                            .from_tbl(Fabric::Table)
-                            .from_col(Fabric::Id)
-                            .to_tbl(FotoPath::Table)
-                            .to_col(Fabric::FotoPathId)
-                            .on_update(ForeignKeyAction::Cascade)
-                            .on_delete(ForeignKeyAction::Restrict),
+                            .from(Fabric::Table, Fabric::FotoPathId)
+                            .to(FotoPath::Table, FotoPath::Id)
+                            .on_delete(ForeignKeyAction::Restrict)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk-fabric-kind-of-fabric-id")
+                            .from(Fabric::Table, Fabric::KindOfFabricId)
+                            .to(KindOfFabric::Table, KindOfFabric::Id)
+                            .on_delete(ForeignKeyAction::Restrict)
+                            .on_update(ForeignKeyAction::Cascade),
                     )
                     .to_owned(),
             )
             .await?;
-
-        let db = manager.get_connection();
-
-        db.execute_unprepared("INSERT INTO foto_path (path) SELECT FROM fabric WHERE foto_path IS NOT NULL").await?;
-        db.execute_unprepared("UPDATE fabric SET foto_path_id = (SELECT id FROM foto_path WHERE foto_path.path=fabric.foto_path) WHERE foto_path IS NOT NULL").await?;
-        
-        manager.alter_table(Table::alter().table(Fabric::Table).drop_column(Fabric::FotoPath).to_owned()).await?;
-
+        // 1. Erstelle eine Backup-Tabelle nur für die Pfade
+        db.execute_unprepared(
+            "INSERT INTO fabric_new (id, name, length, width, costs, producer, kind_of_fabric_id, date_of_purchase, foto_path_id) SELECT f.id, f.name, f.length, f.width, f.costs, f.producer, f.kind_of_fabric_id, f.date_of_purchase, p.id FROM fabric f LEFT JOIN foto_path p ON f.foto_path=p.path",
+        )
+        .await?;
+        manager
+            .drop_table(Table::drop().table(Fabric::Table).to_owned())
+            .await?;
+        manager
+            .rename_table(
+                Table::rename()
+                    .table("fabric_new", Fabric::Table)
+                    .to_owned(),
+            )
+            .await?;
+        db.execute_unprepared("PRAGMA foreign_keys = ON").await?;
         Ok(())
     }
 
     async fn down(&self, manager: &SchemaManager) -> Result<(), DbErr> {
-        // Replace the sample below with your own migration scripts
-        manager.alter_table(Table::alter().table(Fabric::Table).add_column(ColumnDef::new(Fabric::FotoPath).string().null()).to_owned()).await?;
         let db = manager.get_connection();
-
-        db.execute_unprepared("UPDATE fabric SET foto_path = (SELECT foto_path.path from foto_path WHERE foto_path.id=fabric.foto_path_id) WHERE foto_path_id IS NOT NULL").await?;
-
-        manager.alter_table(Table::alter().table(Fabric::Table).drop_foreign_key("fk-fabric-foto-path-id").drop_column(Fabric::FotoPathId).to_owned()).await?;
-
-        manager.drop_table(Table::drop().table(FotoPath::Table).to_owned()).await?;
+        db.execute_unprepared("PRAGMA foreign_keys = OFF").await?;
+        manager
+            .create_table(
+                Table::create()
+                    .table("fabric_old")
+                    .if_not_exists()
+                    .col(pk_auto(Fabric::Id))
+                    .col(string_null(Fabric::Name))
+                    .col(float_null(Fabric::Length))
+                    .col(float_null(Fabric::Width))
+                    .col(float_null(Fabric::Costs))
+                    .col(string_null(Fabric::FotoPath))
+                    .col(string_null(Fabric::Producer))
+                    .col(integer_null(Fabric::KindOfFabricId))
+                    .col(date_null(Fabric::DateOfPurchase))
+                    .foreign_key(
+                        ForeignKey::create()
+                            .name("fk-fabric-kind-of-fabric-id")
+                            .from(Fabric::Table, Fabric::KindOfFabricId)
+                            .to(KindOfFabric::Table, KindOfFabric::Id)
+                            .on_delete(ForeignKeyAction::Restrict)
+                            .on_update(ForeignKeyAction::Cascade),
+                    )
+                    .to_owned(),
+            )
+            .await?;
+        db.execute_unprepared("INSERT INTO fabric_old (id, name, length, width, costs, producer, kind_of_fabric_id, date_of_purchase, foto_path) SELECT f.id, f.name, f.length, f.width, f.costs, f.producer, f.kind_of_fabric_id, f.date_of_purchase, p.path FROM fabric f LEFT JOIN foto_path p on f.foto_path_id=p.id").await?;
+        manager
+            .drop_table(Table::drop().table(FotoPath::Table).to_owned())
+            .await?;
+        manager
+            .drop_table(Table::drop().table(Fabric::Table).to_owned())
+            .await?;
+        manager
+            .rename_table(
+                Table::rename()
+                    .table("fabric_old", Fabric::Table)
+                    .to_owned(),
+            )
+            .await?;
+        db.execute_unprepared("PRAGMA foreign_keys = ON").await?;
         Ok(())
     }
 }
@@ -81,12 +138,25 @@ enum FotoPath {
 enum Fabric {
     Table,
     Id,
+    Name,
+    Length,
+    Width,
+    Costs,
+    Producer,
+    DateOfPurchase,
+    KindOfFabricId,
     FotoPath,
     FotoPathId,
 }
 
 #[derive(DeriveIden)]
 enum Project {
+    Table,
+    Id,
+}
+
+#[derive(DeriveIden)]
+pub enum KindOfFabric {
     Table,
     Id,
 }
