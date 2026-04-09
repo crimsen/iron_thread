@@ -5,6 +5,7 @@ mod m20260227_115403_fill_kind_of_fabric;
 mod m20260401_072415_add_fabric_length_to_fabric_x_project;
 mod m20260408_074450_add_fotopath;
 mod m20260408_183817_add_pattern_path;
+mod m20260409_190015_update_project_for_fotos;
 
 pub struct Migrator;
 
@@ -17,6 +18,7 @@ impl MigratorTrait for Migrator {
             Box::new(m20260401_072415_add_fabric_length_to_fabric_x_project::Migration),
             Box::new(m20260408_074450_add_fotopath::Migration),
             Box::new(m20260408_183817_add_pattern_path::Migration),
+            Box::new(m20260409_190015_update_project_for_fotos::Migration),
         ]
     }
 }
