@@ -24,6 +24,7 @@ export const emptyFabric: Fabric = {
   producer: null,
   kindOfFabricId: null,
   dateOfPurchase: null,
+  fileData: null,
   projects: [],
 };
 
@@ -35,13 +36,9 @@ export const emitCancel = (
   if (showDialog) showDialog.value = false;
 };
 
-export const emitSave = async (
-  value: Fabric,
-  photo: File | undefined = undefined,
-  showDialog: Ref<boolean> | undefined = undefined,
-) => {
+export const emitSave = async (value: Fabric, showDialog: Ref<boolean> | undefined = undefined) => {
   const fabricStore = useFabricStore();
-  await fabricStore.saveFabric(value, photo);
+  await fabricStore.saveFabric(value);
   if (showDialog) showDialog.value = false;
 };
 

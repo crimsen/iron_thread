@@ -44,6 +44,9 @@ pub struct ProjectDTO {
     #[serde_as(as = "DefaultOnError")]
     #[serde(default)]
     pub fabrics: Vec<FabricsArrayWithLength>,
+    #[serde_as(as = "PickFirst<(_, NoneAsEmptyString)>")]
+    #[serde(default)]
+    pub foto_path_id: Option<i32>,
 }
 
 impl From<ProjectDTO> for ActiveModel {
@@ -52,6 +55,7 @@ impl From<ProjectDTO> for ActiveModel {
             id: if value.id < 0 { NotSet } else { Set(value.id) },
             name: Set(value.name),
             size: Set(value.size),
+            foto_path_id: Set(value.foto_path_id),
         }
     }
 }

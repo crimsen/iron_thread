@@ -30,6 +30,7 @@ pub struct Model {
     pub id: i32,
     pub name: String,
     pub size: Option<i32>,
+    pub foto_path_id: Option<i32>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
@@ -37,6 +38,7 @@ pub enum Column {
     Id,
     Name,
     Size,
+    FotoPathId,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -54,6 +56,7 @@ impl PrimaryKeyTrait for PrimaryKey {
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
     FabricXProject,
+    FotoPath,
     PatternXProject,
 }
 
@@ -64,6 +67,7 @@ impl ColumnTrait for Column {
             Self::Id => ColumnType::Integer.def(),
             Self::Name => ColumnType::String(StringLen::None).def(),
             Self::Size => ColumnType::Integer.def().null(),
+            Self::FotoPathId => ColumnType::Integer.def().null(),
         }
     }
 }
@@ -74,6 +78,10 @@ impl RelationTrait for Relation {
             Self::FabricXProject => {
                 Entity::has_many(super::fabric_x_project::Entity).into()
             }
+            Self::FotoPath => Entity::belongs_to(super::foto_path::Entity)
+                .from(Column::FotoPathId)
+                .to(super::foto_path::Column::Id)
+                .into(),
             Self::PatternXProject => {
                 Entity::has_many(super::pattern_x_project::Entity).into()
             }
@@ -84,6 +92,12 @@ impl RelationTrait for Relation {
 impl Related<super::fabric_x_project::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::FabricXProject.def()
+    }
+}
+
+impl Related<super::foto_path::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::FotoPath.def()
     }
 }
 

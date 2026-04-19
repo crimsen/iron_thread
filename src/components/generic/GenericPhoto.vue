@@ -1,30 +1,13 @@
 <template>
   <div class="relative-position self-center" style="width: fit-content">
-    <q-img
-      :class="`border-radius-all ${thumpnail ? 'thumpnail' : 'thumpnail-input'} self-center`"
-      :src="computedImage"
-      @click="triggerUpload"
-    >
+    <q-img :class="`border-radius-all ${thumpnail ? 'thumpnail' : 'thumpnail-input'} self-center`" :src="computedImage"
+      @click="triggerUpload">
     </q-img>
-    <q-btn
-      v-if="(imageURL || modelValue) && !readonly"
-      class="glass-btn glass-bg-negative q-ma-sm absolute-top-right"
-      icon="delete"
-      round
-      size="sm"
-      style="z-index: 999; pointer-events: auto"
-      @click.stop="deleteImage"
-    />
+    <q-btn v-if="(imageURL || modelValue) && !readonly" class="glass-btn glass-bg-negative q-ma-sm absolute-top-right"
+      icon="delete" round size="sm" style="z-index: 999; pointer-events: auto" @click.stop="deleteImage" />
     <slot></slot>
-    <q-file
-      v-if="!readonly"
-      ref="fileInputRef"
-      accept="image/*"
-      v-model="imageFile"
-      v-show="false"
-      capture="environment"
-      @update:modelValue="updateFabricImage"
-    />
+    <q-file v-if="!readonly" ref="fileInputRef" accept="image/*" v-model="imageFile" v-show="false"
+      capture="environment" @update:modelValue="updateFabricImage" />
   </div>
 </template>
 <script setup lang="ts">

@@ -1,5 +1,3 @@
-// mod entities;
-
 use sea_orm::DatabaseConnection;
 use tauri::Manager;
 use tauri_plugin_log::{Target, TargetKind};
@@ -13,6 +11,7 @@ mod database;
 mod dtos;
 mod entities;
 mod error;
+mod utils;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -40,7 +39,7 @@ pub fn run() {
         .invoke_handler(tauri::generate_handler![
             commands::fabric_commands::get_fabrics,
             commands::fabric_commands::save_fabric,
-            commands::fabric_commands::upload_fabric_image,
+            // commands::fabric_commands::upload_fabric_image,
             commands::fabric_commands::delete_fabric,
             commands::kind_of_fabric_commands::get_kind_of_fabrics,
             commands::kind_of_fabric_commands::save_kind_of_fabric,
@@ -67,5 +66,7 @@ mod tests {
         let _ = pattern::Model::export_all(&config);
         let _ = pattern_x_project::Model::export_all(&config);
         let _ = kind_of_fabric::Model::export_all(&config);
+        let _ = foto_path::Model::export_all(&config);
+        let _ = pattern_path::Model::export_all(&config);
     }
 }

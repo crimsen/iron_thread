@@ -8,7 +8,7 @@ pub struct Entity;
 
 impl EntityName for Entity {
     fn table_name(&self) -> &str {
-        "pattern"
+        "foto_path"
     }
 }
 
@@ -24,19 +24,19 @@ impl EntityName for Entity {
     ts_rs :: TS,
 )]
 #[serde(rename_all = "camelCase")]
-#[ts(rename = "Pattern")]
-#[ts(export_to = "../../src/types/pattern.ts")]
+#[ts(rename = "FotoPath")]
+#[ts(export_to = "../../src/types/fotoPath.ts")]
 pub struct Model {
     pub id: i32,
-    pub name: String,
-    pub designer: Option<String>,
+    pub project_id: Option<i32>,
+    pub path: String,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
 pub enum Column {
     Id,
-    Name,
-    Designer,
+    ProjectId,
+    Path,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -53,8 +53,8 @@ impl PrimaryKeyTrait for PrimaryKey {
 
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
-    PatternPath,
-    PatternXProject,
+    Fabric,
+    Project,
 }
 
 impl ColumnTrait for Column {
@@ -62,8 +62,8 @@ impl ColumnTrait for Column {
     fn def(&self) -> ColumnDef {
         match self {
             Self::Id => ColumnType::Integer.def(),
-            Self::Name => ColumnType::String(StringLen::None).def(),
-            Self::Designer => ColumnType::String(StringLen::None).def().null(),
+            Self::ProjectId => ColumnType::Integer.def().null(),
+            Self::Path => ColumnType::String(StringLen::None).def(),
         }
     }
 }
@@ -71,35 +71,23 @@ impl ColumnTrait for Column {
 impl RelationTrait for Relation {
     fn def(&self) -> RelationDef {
         match self {
-            Self::PatternPath => {
-                Entity::has_many(super::pattern_path::Entity).into()
-            }
-            Self::PatternXProject => {
-                Entity::has_many(super::pattern_x_project::Entity).into()
-            }
+            Self::Fabric => Entity::has_many(super::fabric::Entity).into(),
+            Self::Project => Entity::belongs_to(super::project::Entity)
+                .from(Column::ProjectId)
+                .to(super::project::Column::Id)
+                .into(),
         }
     }
 }
 
-impl Related<super::pattern_path::Entity> for Entity {
+impl Related<super::fabric::Entity> for Entity {
     fn to() -> RelationDef {
-        Relation::PatternPath.def()
-    }
-}
-
-impl Related<super::pattern_x_project::Entity> for Entity {
-    fn to() -> RelationDef {
-        Relation::PatternXProject.def()
+        Relation::Fabric.def()
     }
 }
 
 impl Related<super::project::Entity> for Entity {
     fn to() -> RelationDef {
-        super::pattern_x_project::Relation::Project.def()
-    }
-    fn via() -> Option<RelationDef> {
-        Some(super::pattern_x_project::Relation::Pattern.def().rev())
+        Relation::Project.def()
     }
 }
-
-impl ActiveModelBehavior for ActiveModel {}

@@ -24,14 +24,8 @@
     </q-card-section>
   </q-card>
   <q-dialog v-model="showDialog" v-if="modifyFabric">
-    <GenericInputs
-      v-model="modifyFabric"
-      :schema="schema"
-      @save="save"
-      @cancel="cancel"
-      @delete="deleteFabric"
-      deletable
-    />
+    <GenericInputs v-model="modifyFabric" :schema="schema" @save="save" @cancel="cancel" @delete="deleteFabric"
+      deletable />
   </q-dialog>
 </template>
 
@@ -43,6 +37,7 @@ import { convertFileSrc } from '@tauri-apps/api/core';
 import { debug } from '@tauri-apps/plugin-log';
 import GenericInputs from '../generic/GenericInputs.vue';
 import { emitSave, schema, emitCancel, emitDelete } from './models';
+import { toBase64 } from 'src/utils';
 
 onBeforeMount(async () => {
   await kindOfFabricStore.loadKindOfFabrics();
@@ -73,7 +68,11 @@ const image = computed(() => {
 });
 
 const save = async (fabric: Fabric, file: File | undefined = undefined) => {
-  await emitSave(fabric, file, showDialog);
+  if (file) {
+    const full_base64 = await toBase64(file);
+    fabric.fileData = full_base64.split(',')[1] as string;
+  }
+  await emitSave(fabric, showDialog);
 };
 
 const cancel = () => {

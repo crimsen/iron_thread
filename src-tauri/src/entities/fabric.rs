@@ -31,10 +31,10 @@ pub struct Model {
     pub length: Option<f32>,
     pub width: Option<f32>,
     pub costs: Option<f32>,
-    pub foto_path: Option<String>,
     pub producer: Option<String>,
     pub kind_of_fabric_id: Option<i32>,
     pub date_of_purchase: Option<Date>,
+    pub foto_path_id: Option<i32>,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DeriveColumn)]
@@ -44,10 +44,10 @@ pub enum Column {
     Length,
     Width,
     Costs,
-    FotoPath,
     Producer,
     KindOfFabricId,
     DateOfPurchase,
+    FotoPathId,
 }
 
 #[derive(Copy, Clone, Debug, EnumIter, DerivePrimaryKey)]
@@ -65,6 +65,7 @@ impl PrimaryKeyTrait for PrimaryKey {
 #[derive(Copy, Clone, Debug, EnumIter)]
 pub enum Relation {
     FabricXProject,
+    FotoPath,
     KindOfFabric,
 }
 
@@ -77,10 +78,10 @@ impl ColumnTrait for Column {
             Self::Length => ColumnType::Float.def().null(),
             Self::Width => ColumnType::Float.def().null(),
             Self::Costs => ColumnType::Float.def().null(),
-            Self::FotoPath => ColumnType::String(StringLen::None).def().null(),
             Self::Producer => ColumnType::String(StringLen::None).def().null(),
             Self::KindOfFabricId => ColumnType::Integer.def().null(),
             Self::DateOfPurchase => ColumnType::Date.def().null(),
+            Self::FotoPathId => ColumnType::Integer.def().null(),
         }
     }
 }
@@ -91,6 +92,10 @@ impl RelationTrait for Relation {
             Self::FabricXProject => {
                 Entity::has_many(super::fabric_x_project::Entity).into()
             }
+            Self::FotoPath => Entity::belongs_to(super::foto_path::Entity)
+                .from(Column::FotoPathId)
+                .to(super::foto_path::Column::Id)
+                .into(),
             Self::KindOfFabric => {
                 Entity::belongs_to(super::kind_of_fabric::Entity)
                     .from(Column::KindOfFabricId)
@@ -104,6 +109,12 @@ impl RelationTrait for Relation {
 impl Related<super::fabric_x_project::Entity> for Entity {
     fn to() -> RelationDef {
         Relation::FabricXProject.def()
+    }
+}
+
+impl Related<super::foto_path::Entity> for Entity {
+    fn to() -> RelationDef {
+        Relation::FotoPath.def()
     }
 }
 

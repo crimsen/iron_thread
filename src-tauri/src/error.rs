@@ -4,6 +4,8 @@ pub enum MyError {
     DbError(#[from] sea_orm::DbErr),
     #[error("io error: {0}")]
     IOError(#[from] std::io::Error),
+    #[error("tauri error: {0}")]
+    TauriErr(#[from] tauri::Error),
     #[error("validation error: {0}")]
     Validation(String),
 }
